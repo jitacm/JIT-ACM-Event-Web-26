@@ -194,15 +194,15 @@ export function Header() {
             {/* Left: Identity / Wordmark */}
             <a
               href="#hero"
-              className="flex items-center gap-2 sm:gap-2.5 text-white hover:text-white/80 transition-colors uppercase tracking-[0.16em] font-medium py-1"
+              className="flex items-center gap-2.5 sm:gap-3 text-white hover:text-white/80 transition-colors uppercase tracking-[0.16em] font-medium py-1"
               aria-label="JIT ACM home"
             >
               <Image
                 src="/images/jit-acm-logo.png"
                 alt="JIT ACM Logo"
-                width={24}
-                height={24}
-                className="w-5 h-5 sm:w-5.5 sm:h-5.5 object-contain shrink-0"
+                width={36}
+                height={36}
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
                 priority
               />
               <span className="font-semibold tracking-wider">JIT ACM</span>
@@ -336,13 +336,13 @@ export function Header() {
           }}
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               <Image
                 src="/images/jit-acm-logo.png"
                 alt="JIT ACM Logo"
-                width={20}
-                height={20}
-                className="w-5 h-5 object-contain shrink-0"
+                width={36}
+                height={36}
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
               />
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/50">
                 JIT ACM · MENU

@@ -17,6 +17,7 @@ const COMMUNITY_PILLARS = [
 export function OpeningSection() {
   const containerRef = useRef<HTMLElement | null>(null);
   const editorialRef = useRef<HTMLDivElement | null>(null);
+  const logoRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const metaRef = useRef<HTMLDivElement | null>(null);
@@ -31,6 +32,8 @@ export function OpeningSection() {
 
     const setX = gsap.quickTo(editorialRef.current, "x", { duration: 0.8, ease: "power2.out" });
     const setY = gsap.quickTo(editorialRef.current, "y", { duration: 0.8, ease: "power2.out" });
+    const setLogoX = logoRef.current ? gsap.quickTo(logoRef.current, "x", { duration: 1.2, ease: "power2.out" }) : null;
+    const setLogoY = logoRef.current ? gsap.quickTo(logoRef.current, "y", { duration: 1.2, ease: "power2.out" }) : null;
 
     const handlePointerMove = (e: PointerEvent) => {
       const { innerWidth, innerHeight } = window;
@@ -38,6 +41,10 @@ export function OpeningSection() {
       const ny = (e.clientY / innerHeight) * 2 - 1;
       setX(nx * 8);
       setY(ny * 6);
+      if (setLogoX && setLogoY) {
+        setLogoX(nx * 4);
+        setLogoY(ny * 3);
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -47,7 +54,7 @@ export function OpeningSection() {
   useEffect(() => {
     // If reduced motion is requested or motion is paused, ensure hero is immediately fully visible
     if (reducedMotion || (typeof document !== "undefined" && document.documentElement.getAttribute("data-motion") === "paused")) {
-      const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current, containerRef.current];
+      const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current, containerRef.current, logoRef.current];
       elements.forEach((el) => {
         if (el) gsap.set(el, { opacity: 1, clearProps: "opacity,transform" });
       });
@@ -62,7 +69,7 @@ export function OpeningSection() {
         if (hasRevealed) return;
         hasRevealed = true;
 
-        const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current];
+        const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current, logoRef.current];
 
         // Failsafe: guarantee all hero text elements are 100% visible after at most 2.5s
         failsafeTimer = setTimeout(() => {
@@ -82,11 +89,20 @@ export function OpeningSection() {
           },
         });
 
+        if (logoRef.current) {
+          tl.fromTo(
+            logoRef.current,
+            { opacity: 0, scale: 0.88 },
+            { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" }
+          );
+        }
+
         if (metaRef.current) {
           tl.fromTo(
             metaRef.current,
             { opacity: 0, y: -12 },
-            { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }
+            { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
+            "-=0.8"
           );
         }
 
@@ -216,7 +232,7 @@ export function OpeningSection() {
         {/* Top Meta Line: Chapter Identity */}
         <div
           ref={metaRef}
-          className="flex items-center justify-between font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-white/50 border-b border-white/[0.14] pb-5"
+          className="flex items-center justify-between font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-white/50 border-b border-white/[0.14] pb-5 relative z-10"
         >
           <div className="flex items-center gap-3">
             <Image
@@ -231,12 +247,41 @@ export function OpeningSection() {
           </div>
         </div>
 
+        {/* Visual Focal Point: Large Centered ACM Insignia */}
+        <div
+          ref={logoRef}
+          aria-hidden="true"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-none select-none flex items-center justify-center w-[250px] h-[250px] sm:w-[360px] sm:h-[360px] md:w-[460px] md:h-[460px] lg:w-[560px] lg:h-[560px] xl:w-[620px] xl:h-[620px]"
+        >
+          {/* Subtle radiant cyan/blue atmospheric aura to illuminate transparent logo against deep dark space */}
+          <div
+            className="absolute inset-0 rounded-full blur-3xl pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(0, 153, 255, 0.22) 0%, rgba(0, 90, 220, 0.12) 40%, rgba(0, 30, 90, 0.04) 65%, transparent 75%)",
+              transform: "scale(1.2)",
+            }}
+          />
+
+          {/* Logo container preserving exact proportions */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            <Image
+              src="/images/jit-acm-logo.png"
+              alt="JIT ACM Insignia"
+              fill
+              priority
+              className="object-contain select-none pointer-events-none drop-shadow-[0_0_40px_rgba(0,140,255,0.30)] opacity-[0.38] sm:opacity-[0.42] md:opacity-[0.48] lg:opacity-[0.52]"
+              sizes="(max-width: 640px) 250px, (max-width: 768px) 360px, (max-width: 1024px) 460px, 620px"
+            />
+          </div>
+        </div>
+
         {/* Main Editorial Core with Deep Negative Space and Subtle Parallax */}
         <div 
           ref={editorialRef}
-          className="my-auto py-12 sm:py-20 max-w-5xl transition-transform duration-300 ease-out will-change-transform"
+          className="relative z-10 my-auto py-12 sm:py-20 max-w-5xl transition-transform duration-300 ease-out will-change-transform"
         >
-          <div className="flex items-center gap-2 font-mono text-xs sm:text-sm uppercase tracking-[0.24em] text-white/60 mb-6">
+          <div className="flex items-center gap-2 font-mono text-xs sm:text-sm uppercase tracking-[0.24em] text-white/60 mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             <Diamond size={5} filled={false} />
             <span>LIVING COMPUTATIONAL ENVIRONMENT</span>
           </div>
@@ -245,14 +290,14 @@ export function OpeningSection() {
           <h1
             ref={titleRef}
             aria-label="JIT ACM"
-            className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-light tracking-tight text-white leading-[0.9] mb-8 select-none"
+            className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-light tracking-tight text-white leading-[0.9] mb-8 select-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
             style={{ fontWeight: 300 }}
           >
             JIT ACM
           </h1>
 
           {/* Authoritative Primary Statement */}
-          <div ref={contentRef} className="space-y-4 max-w-4xl">
+          <div ref={contentRef} className="space-y-4 max-w-4xl drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)]">
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-light text-white/95 leading-[1.15] tracking-tight uppercase">
               ADVANCING COMPUTING. BUILDING PEOPLE.
             </h2>
@@ -265,7 +310,7 @@ export function OpeningSection() {
           {/* Four Architectural Pillar Badges */}
           <div
             ref={pillarsRef}
-            className="mt-12 pt-6 border-t border-white/[0.10] flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.18em] text-white/50"
+            className="mt-12 pt-6 border-t border-white/[0.10] flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.18em] text-white/50 relative z-10"
           >
             {COMMUNITY_PILLARS.map((pillar) => (
               <div key={pillar} className="flex items-center gap-2">
@@ -277,7 +322,7 @@ export function OpeningSection() {
         </div>
 
         {/* Bottom Scroll Anchor & Hairline */}
-        <div className="pt-6">
+        <div className="pt-6 relative z-10">
           <Hairline orientation="horizontal" className="mb-6" />
           <div className="flex items-center justify-between font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.16em] text-white/50">
             <a
