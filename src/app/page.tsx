@@ -3,7 +3,7 @@ import { Header } from "@/components/navigation/Header";
 import { OpeningExperience } from "@/components/opening/OpeningExperience";
 import { ParticleField } from "@/components/visual/ParticleField";
 import { OpeningSection } from "@/components/sections/OpeningSection";
-import { SponsorsSection } from "@/components/sections/SponsorsSection";
+// import { SponsorsSection } from "@/components/sections/SponsorsSection";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { EventsSection } from "@/components/sections/EventsSection";
 import { GallerySection } from "@/components/sections/GallerySection";
@@ -25,7 +25,8 @@ export default function Home() {
         <Header />
         <main id="main-content" className="flex-1 flex flex-col focus:outline-none">
           <OpeningSection />
-          <SponsorsSection />
+          {/* Sponsors section temporarily hidden until confirmed sponsor list is available */}
+          {/* <SponsorsSection /> */}
           <AboutSection />
           <EventsSection />
           <GallerySection />

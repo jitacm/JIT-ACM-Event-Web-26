@@ -4,61 +4,43 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { registerScrollTrigger, gsap } from "@/lib/motion/gsap";
 import { usePrefersReducedMotion } from "@/lib/motion/tokens";
 
-interface RepoItem {
+export interface RepoItem {
   slug: string;
+  title: string;
   org: string;
   name: string;
   summary: string;
   language: string;
   languageColor: string;
   category: string;
-  repoUrl: string;
+  repoUrl?: string;
+  isAvailable?: boolean;
 }
 
-const REPOSITORIES: RepoItem[] = [
+export const REPOSITORIES: RepoItem[] = [
   {
-    slug: "project-1",
-    org: "acm-face",
-    name: "ebpf-kernel-mon",
-    summary:
-      "eBPF-driven performance monitoring infrastructure providing nanosecond-precision cache profiling and memory hierarchy analysis on Linux kernels.",
-    language: "Rust",
-    languageColor: "#dea584",
-    category: "Systems",
-    repoUrl: "https://github.com/acm-face/ebpf-kernel-mon",
-  },
-  {
-    slug: "project-2",
-    org: "acm-face",
-    name: "raft-consensus-rs",
-    summary:
-      "High-throughput Raft consensus implementation in Rust featuring deterministic asynchronous simulation, network partition resilience, and formal TLA+ specifications.",
-    language: "Rust",
-    languageColor: "#dea584",
-    category: "Distributed",
-    repoUrl: "https://github.com/acm-face/raft-consensus-rs",
-  },
-  {
-    slug: "project-3",
-    org: "acm-face",
-    name: "topology-engine-gl",
-    summary:
-      "Sparse matrix graph computation library and WebGL rendering pipeline designed for real-time visual inspection of high-dimensional peer networks.",
+    slug: "jit-acm-official-website",
+    title: "JIT ACM Official Website",
+    org: "jitacm",
+    name: "JIT-ACM-Offcial-Website",
+    summary: "Official website source repository.",
     language: "TypeScript",
     languageColor: "#3178c6",
-    category: "Graphics",
-    repoUrl: "https://github.com/acm-face/topology-engine-gl",
+    category: "Web",
+    repoUrl: "https://github.com/jitacm/JIT-ACM-Offcial-Website",
+    isAvailable: true,
   },
   {
-    slug: "project-4",
-    org: "acm-face",
-    name: "zk-credential-prover",
-    summary:
-      "Succinct non-interactive zero-knowledge argument system tailored for privacy-preserving academic credential verification and decentralized student identity.",
-    language: "Rust",
-    languageColor: "#dea584",
-    category: "Cryptography",
-    repoUrl: "https://github.com/acm-face/zk-credential-prover",
+    slug: "jit-acm-web-26",
+    title: "JIT ACM Web 26",
+    org: "jitacm",
+    name: "JIT-ACM-Web-26",
+    summary: "Link to the JIT ACM Web 26 repository.",
+    language: "TypeScript",
+    languageColor: "#3178c6",
+    category: "Web",
+    repoUrl: "https://github.com/jitacm/JIT-ACM-Web-26",
+    isAvailable: true,
   },
 ];
 
@@ -178,16 +160,16 @@ export function ProjectsSection() {
           </div>
 
           <div className="flex items-center gap-3 text-white/40 font-mono text-[9px] sm:text-[10px]">
-            <span>04 SYSTEMS</span>
+            <span>{String(REPOSITORIES.length).padStart(2, "0")} REPOSITORIES</span>
             <span className="text-white/20">·</span>
             <span className="text-white/50">OPEN SOURCE</span>
           </div>
         </div>
-
         {/* 2-Column Desktop / 1-Column Mobile GitHub-Style Repository Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 w-full">
           {REPOSITORIES.map((repo, idx) => {
             const isActive = idx === activeIndex;
+            const isAvailable = Boolean(repo.isAvailable && repo.repoUrl);
             return (
               <div
                 key={repo.slug}
@@ -204,37 +186,70 @@ export function ProjectsSection() {
                   }
                 }}
                 aria-current={isActive ? "true" : undefined}
-                aria-label={`Select ${repo.name} project`}
-                className="group relative rounded-md border border-white/[0.10] bg-[#090a0d] hover:border-white/[0.22] hover:bg-[#0c0d12] shadow-[0_8px_30px_rgba(0,0,0,0.6)] p-5 sm:p-6 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+                aria-label={`Select ${repo.title || repo.name} project${!isAvailable ? " (Repository unavailable)" : ""}`}
+                className={`group relative rounded-md border bg-[#090a0d] shadow-[0_8px_30px_rgba(0,0,0,0.6)] p-5 sm:p-6 transition-all duration-300 flex flex-col justify-between cursor-pointer ${
+                  isAvailable
+                    ? "border-white/[0.10] hover:border-white/[0.22] hover:bg-[#0c0d12]"
+                    : "border-white/[0.07] hover:border-white/[0.14] hover:bg-[#0b0c10]"
+                }`}
               >
                 {/* Top: Repository Name + GitHub/External Icon */}
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-2.5">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-0.5">
+                      {isAvailable ? (
+                        <a
+                          href={repo.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="group/link flex flex-col gap-0.5 focus-visible:outline-sky-400"
+                        >
+                          <span className="font-semibold text-white group-hover/link:text-sky-300 transition-colors text-sm sm:text-[15px]">
+                            {repo.title}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 font-mono text-xs sm:text-[13px] tracking-tight">
+                            <span className="text-white/45 group-hover/link:text-white/65 transition-colors font-normal">
+                              {repo.org} /
+                            </span>
+                            <span className="font-medium text-white/80 group-hover/link:text-sky-300 transition-colors">
+                              {repo.name}
+                            </span>
+                          </span>
+                        </a>
+                      ) : (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-semibold text-white text-sm sm:text-[15px]">
+                            {repo.title}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 font-mono text-xs sm:text-[13px] tracking-tight text-white/45">
+                            <span className="text-white/35 font-normal">{repo.org} /</span>
+                            <span className="font-medium text-white/70">{repo.name}</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {isAvailable ? (
                       <a
                         href={repo.repoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 font-mono text-sm sm:text-[15px] tracking-tight group-hover:text-sky-300 transition-colors focus-visible:outline-sky-400"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Open ${repo.org}/${repo.name} on GitHub`}
+                        className="text-white/40 hover:text-white transition-colors p-1 focus-visible:outline-sky-400 shrink-0"
                       >
-                        <span className="text-white/45 group-hover:text-white/65 transition-colors font-normal">
-                          {repo.org} /
-                        </span>
-                        <span className="font-semibold text-white group-hover:text-sky-300 transition-colors">
-                          {repo.name}
-                        </span>
+                        <GitHubIcon className="w-4 h-4 text-white/50 group-hover:text-white/90 transition-colors" />
                       </a>
-                    </div>
-
-                    <a
-                      href={repo.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open ${repo.org}/${repo.name} on GitHub`}
-                      className="text-white/40 hover:text-white transition-colors p-1 focus-visible:outline-sky-400 shrink-0"
-                    >
-                      <GitHubIcon className="w-4 h-4 text-white/50 group-hover:text-white/90 transition-colors" />
-                    </a>
+                    ) : (
+                      <span
+                        className="text-white/20 p-1 shrink-0 cursor-default"
+                        aria-hidden="true"
+                        title="Repository unavailable"
+                      >
+                        <GitHubIcon className="w-4 h-4 text-white/20" />
+                      </span>
+                    )}
                   </div>
 
                   {/* Middle: Short Description (approx 2 lines) */}
@@ -243,37 +258,48 @@ export function ProjectsSection() {
                   </p>
                 </div>
 
-              {/* Bottom: Language / Category + GitHub Action */}
-              <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] text-xs font-mono">
-                {/* Language Indicator */}
-                <div className="flex items-center gap-3 text-white/55 text-[11px] sm:text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                      style={{ backgroundColor: repo.languageColor }}
-                      aria-hidden="true"
-                    />
-                    <span className="text-white/85 font-medium">{repo.language}</span>
+                {/* Bottom: Language / Category + GitHub Action */}
+                <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] text-xs font-mono">
+                  {/* Language Indicator */}
+                  <div className="flex items-center gap-3 text-white/55 text-[11px] sm:text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
+                        style={{ backgroundColor: repo.languageColor }}
+                        aria-hidden="true"
+                      />
+                      <span className="text-white/85 font-medium">{repo.language}</span>
+                    </div>
+                    <span className="text-white/20">·</span>
+                    <span className="text-white/50">{repo.category}</span>
                   </div>
-                  <span className="text-white/20">·</span>
-                  <span className="text-white/50">{repo.category}</span>
-                </div>
 
-                {/* Direct GitHub Action */}
-                <a
-                  href={repo.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open ${repo.name} repository`}
-                  className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium uppercase tracking-wider text-sky-400/90 group-hover:text-sky-300 transition-colors focus-visible:outline-sky-400"
-                >
-                  <GitHubIcon className="w-3 h-3 text-sky-400/70 group-hover:text-sky-300 transition-colors" />
-                  <span>GitHub ↗</span>
-                </a>
+                  {/* Direct GitHub Action OR Subtle Unavailable Status */}
+                  {isAvailable ? (
+                    <a
+                      href={repo.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`Open ${repo.title || repo.name} repository`}
+                      className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-medium uppercase tracking-wider text-sky-400/90 group-hover:text-sky-300 transition-colors focus-visible:outline-sky-400"
+                    >
+                      <GitHubIcon className="w-3 h-3 text-sky-400/70 group-hover:text-sky-300 transition-colors" />
+                      <span>GitHub ↗</span>
+                    </a>
+                  ) : (
+                    <span
+                      className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono tracking-wider text-white/40 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.06] cursor-default select-none"
+                      title="Repository unavailable"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/25 inline-block" aria-hidden="true" />
+                      <span>Repository unavailable</span>
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
         </div>
       </div>
     </section>

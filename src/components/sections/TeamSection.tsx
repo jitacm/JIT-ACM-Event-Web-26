@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { TEAM_MEMBERS } from "@/content/team";
 import { ALUMNI_MEMBERS } from "@/content/alumni";
@@ -52,44 +52,44 @@ function findLink(links: MemberLink[] | undefined, kind: "github" | "linkedin"):
 }
 
 /**
- * Single Member Profile Block (Equal visual weight, compact, no cards/HUD)
+ * Single Member Profile Block (Equal visual weight, compact, unique DOM instance)
  */
 function MemberCard({
   member,
-  isClone = false,
   onLinkClick,
 }: {
   member: MemberItem;
-  isClone?: boolean;
   onLinkClick?: (e: React.MouseEvent) => void;
 }) {
+  const [imageError, setImageError] = useState(false);
   const initials = getInitials(member.name);
   const githubUrl = findLink(member.links, "github");
   const linkedinUrl = findLink(member.links, "linkedin");
 
-  // Increase clickable area for social links (44x44px minimum touch target)
   const linkHitAreaStyle = {
-    width: '44px',
-    height: '44px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "44px",
+    height: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   } as React.CSSProperties;
 
+  const showPhoto = Boolean(member.photo && !member.placeholder && !imageError);
+
   return (
-    <div
-      className="flex flex-col min-w-[130px] max-w-[170px] w-full sm:min-w-[150px] md:min-w-[170px] shrink-0 select-none group"
-      aria-hidden={isClone ? "true" : undefined}
-    >
+    <div className="flex flex-col min-w-[130px] max-w-[170px] w-full sm:min-w-[150px] md:min-w-[170px] shrink-0 select-none group">
       {/* Compact Portrait Frame with solid dark backdrop preventing particle bleed-through */}
       <div className="relative w-full aspect-square overflow-hidden bg-[#0d0f14] border border-white/[0.08] group-hover:border-white/20 transition-colors duration-300 mb-2 sm:mb-2.5 flex items-center justify-center">
-        {member.photo && !member.placeholder ? (
+        {showPhoto ? (
           <Image
-            src={member.photo}
-            alt={isClone ? "" : member.name}
+            src={member.photo!}
+            alt={member.name}
             fill
-            className="object-cover"
+            unoptimized
+            draggable={false}
+            className="object-cover select-none pointer-events-none"
             sizes="(max-width: 640px) 130px, (max-width: 768px) 150px, 170px"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/[0.12] bg-white/[0.04] flex items-center justify-center font-mono text-xs sm:text-sm font-light tracking-[0.14em] text-white/90">
@@ -116,7 +116,6 @@ function MemberCard({
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              tabIndex={isClone ? -1 : 0}
               onClick={onLinkClick}
               aria-label={`${member.name} on LinkedIn`}
               className="hover:text-white transition-colors focus-visible:outline-sky-400"
@@ -130,13 +129,12 @@ function MemberCard({
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              tabIndex={isClone ? -1 : 0}
               onClick={onLinkClick}
               aria-label={`${member.name} on GitHub`}
               className="hover:text-white transition-colors focus-visible:outline-sky-400"
               style={linkHitAreaStyle}
             >
-              <GitHubIcon className="w-5 h-5" />
+              <GitHubIcon className="w-4 h-4" />
             </a>
           )}
         </div>
@@ -145,88 +143,147 @@ function MemberCard({
   );
 }
 
-/**
- * Two-Lane Continuous Horizontal Stream with Pointer Drag and Touch Swipe
- */
-function TeamLane({
-  members,
-  direction,
-  reducedMotion,
-  laneAriaLabel,
-}: {
-  members: MemberItem[];
-  direction: "left" | "right";
-  reducedMotion: boolean;
-  laneAriaLabel: string;
-}) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const cycleRef = useRef<HTMLDivElement | null>(null);
+// Combined roster: TEAM_MEMBERS + ALUMNI_MEMBERS
+const ALUMNI_AS_MEMBERS: MemberItem[] = ALUMNI_MEMBERS.map((alumnus: AlumniItem) => ({
+  id: alumnus.id,
+  name: alumnus.name,
+  role: alumnus.formerRole,
+  bio: alumnus.contributions,
+  photo: alumnus.photo,
+  links: alumnus.links,
+  placeholder: false,
+}));
 
-  // Position & physics state
-  const posX = useRef<number>(0);
+const ALL_PEOPLE: MemberItem[] = [...TEAM_MEMBERS, ...ALUMNI_AS_MEMBERS];
+
+export function TeamSection() {
+  const reducedMotion = usePrefersReducedMotion();
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const lastShifts = useRef<number[]>([]);
+
+  // Carousel layout metrics
+  const metrics = useRef<{
+    cardWidth: number;
+    pitch: number;
+    totalWidth: number;
+    baseOffsets: number[];
+  }>({
+    cardWidth: 170,
+    pitch: 190,
+    totalWidth: 13 * 190,
+    baseOffsets: [],
+  });
+
+  // Continuous unified horizontal coordinate (increases as cards drift leftwards)
+  const scrollPos = useRef<number>(0);
+
+  // Interaction & momentum state
   const isDragging = useRef<boolean>(false);
+  const isInteracting = useRef<boolean>(false);
   const isHovering = useRef<boolean>(false);
-  const startX = useRef<number>(0);
-  const startY = useRef<number>(0);
-  const startOffset = useRef<number>(0);
-  const startTime = useRef<number>(0);
+  const dragStartX = useRef<number>(0);
+  const dragStartY = useRef<number>(0);
+  const dragStartScrollPos = useRef<number>(0);
+  const lastDragX = useRef<number>(0);
+  const lastDragTime = useRef<number>(0);
+  const momentumVel = useRef<number>(0);
   const hasMoved = useRef<boolean>(false);
   const isHorizontalDrag = useRef<boolean>(false);
   const isVerticalScroll = useRef<boolean>(false);
-  const lastX = useRef<number>(0);
-  const lastTime = useRef<number>(0);
-  const momentumVel = useRef<number>(0);
-  const cycleWidth = useRef<number>(0);
+  const resumeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Base speed: +0.25 px/frame for rightward, -0.25 px/frame for leftward
-  // Slower speed gives users more time to read member info before cards move away
-  const baseSpeed = direction === "right" ? 0.25 : -0.25;
+  // Measure card sizes, pitch, and offsets directly from the DOM
+  const updateMetrics = useCallback(() => {
+    const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+    if (cards.length < 2) return;
 
-  // Ensure minimum cycle width by repeating members if count is small
-  const repeatCount = Math.max(2, Math.ceil(8 / Math.max(1, members.length)));
-  const cycleMembers = Array.from({ length: repeatCount }, () => members).flat();
+    const cardWidth = cards[0].offsetWidth || 170;
+    const firstOffset = cards[0].offsetLeft;
+    const secondOffset = cards[1].offsetLeft;
+    const pitch = secondOffset - firstOffset || (cardWidth + 20);
+    const totalWidth = cards.length * pitch;
+    const baseOffsets = cards.map((c) => c.offsetLeft);
 
-  // Measure cycle width on mount and resize
-  const measure = useCallback(() => {
-    if (cycleRef.current) {
-      cycleWidth.current = cycleRef.current.scrollWidth;
+    metrics.current = {
+      cardWidth,
+      pitch,
+      totalWidth,
+      baseOffsets,
+    };
+  }, []);
+
+  // Update carousel positions: translates main track and recycles cards that exit the left edge
+  const renderCarousel = useCallback(() => {
+    const { cardWidth, pitch, totalWidth, baseOffsets } = metrics.current;
+    if (!trackRef.current || totalWidth <= 0 || baseOffsets.length === 0) return;
+
+    const s = scrollPos.current;
+
+    // Move track smoothly
+    trackRef.current.style.transform = `translate3d(${-s}px, 0, 0)`;
+
+    // Seamless recycling: when a card exits the left boundary, recycle it to the right end
+    // without duplicating DOM cards or creating visual gaps
+    const minPos = -(cardWidth + (pitch - cardWidth));
+
+    for (let i = 0; i < cardRefs.current.length; i++) {
+      const card = cardRefs.current[i];
+      if (!card) continue;
+
+      const baseOffset = baseOffsets[i] ?? (i * pitch);
+      const unshiftedPos = baseOffset - s;
+
+      // Wrap visual coordinate smoothly into [minPos, minPos + totalWidth)
+      const relPos = unshiftedPos - minPos;
+      const wrappedRelPos = ((relPos % totalWidth) + totalWidth) % totalWidth;
+      const targetVisualPos = wrappedRelPos + minPos;
+
+      const shift = targetVisualPos - unshiftedPos;
+
+      if (lastShifts.current[i] !== shift) {
+        lastShifts.current[i] = shift;
+        card.style.transform = shift !== 0 ? `translate3d(${shift}px, 0, 0)` : "";
+      }
     }
   }, []);
 
-  useEffect(() => {
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [measure]);
+  // Pause helper with auto-resume after idle delay
+  const pauseAutoScrollTemporarily = useCallback((idleDelayMs = 1500) => {
+    isInteracting.current = true;
+    if (resumeTimeout.current) {
+      clearTimeout(resumeTimeout.current);
+    }
+    resumeTimeout.current = setTimeout(() => {
+      isInteracting.current = false;
+    }, idleDelayMs);
+  }, []);
 
-  // Animation frame loop for continuous drift & drag momentum
+  // Main continuous animation loop with delta-time constant speed
   useEffect(() => {
+    updateMetrics();
+    renderCarousel();
+
     let animId: number;
+    let lastTime: number | null = null;
+    const baseSpeed = 34; // Constant smooth drift speed (px/sec)
 
-    const tick = () => {
-      const W = cycleWidth.current;
+    const tick = (time: number) => {
+      if (lastTime === null) lastTime = time;
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
 
-      // Pause drift when dragging, hovering, or reduced motion
-      if (!isDragging.current && !isHovering.current) {
-        if (Math.abs(momentumVel.current) > 0.05) {
-          posX.current += momentumVel.current;
-          momentumVel.current *= 0.94; // exponential friction decay
-        } else {
-          momentumVel.current = 0;
-          if (!reducedMotion) {
-            posX.current += baseSpeed;
-          }
-        }
-
-        // Invisible wrap within [-W, 0]
-        if (W > 0) {
-          while (posX.current < -W) posX.current += W;
-          while (posX.current > 0) posX.current -= W;
-        }
-
-        if (trackRef.current) {
-          trackRef.current.style.transform = `translate3d(${posX.current}px, 0, 0)`;
+      // Inertial momentum decay after user release
+      if (Math.abs(momentumVel.current) > 0.1) {
+        scrollPos.current += momentumVel.current;
+        momentumVel.current *= 0.94;
+        renderCarousel();
+      } else {
+        momentumVel.current = 0;
+        // Continuous forward movement in one direction
+        if (!isDragging.current && !isInteracting.current && !isHovering.current && !reducedMotion) {
+          scrollPos.current += baseSpeed * dt;
+          renderCarousel();
         }
       }
 
@@ -234,49 +291,68 @@ function TeamLane({
     };
 
     animId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animId);
-  }, [baseSpeed, reducedMotion]);
 
-  // Pointer Down (Mouse drag or touch start)
-  const handlePointerDown = (e: React.PointerEvent) => {
+    // ResizeObserver to recalibrate on breakpoint changes, font loading, or orientation change
+    const ro = new ResizeObserver(() => {
+      updateMetrics();
+      lastShifts.current = [];
+      renderCarousel();
+    });
+
+    if (trackRef.current) {
+      ro.observe(trackRef.current);
+    }
+
+    return () => {
+      cancelAnimationFrame(animId);
+      ro.disconnect();
+      if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+    };
+  }, [reducedMotion, renderCarousel, updateMetrics]);
+
+  // Pointer Down (Desktop mouse click-and-drag start)
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    // Mobile touches are handled via touch listeners to avoid pointer capture gesture conflicts
+    if (e.pointerType === "touch") return;
+
     isDragging.current = true;
-    startX.current = e.clientX;
-    startY.current = e.clientY;
-    startOffset.current = posX.current;
-    startTime.current = performance.now();
-    lastX.current = e.clientX;
-    lastTime.current = performance.now();
+    isInteracting.current = true;
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+
+    dragStartX.current = e.clientX;
+    dragStartY.current = e.clientY;
+    dragStartScrollPos.current = scrollPos.current;
+    lastDragX.current = e.clientX;
+    lastDragTime.current = performance.now();
     momentumVel.current = 0;
     hasMoved.current = false;
     isHorizontalDrag.current = false;
     isVerticalScroll.current = false;
 
-    // Capture pointer on desktop
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
-      // Ignore if not supported
+      // Ignore if pointer capture not supported
     }
   };
 
-  // Pointer Move (Drag tracking with vertical scroll detection)
-  const handlePointerMove = (e: React.PointerEvent) => {
+  // Pointer Move (Desktop mouse drag with direction locking)
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging.current || isVerticalScroll.current) return;
 
-    const dx = e.clientX - startX.current;
-    const dy = e.clientY - startY.current;
-    const elapsedTime = performance.now() - startTime.current;
+    const dx = e.clientX - dragStartX.current;
+    const dy = e.clientY - dragStartY.current;
 
-    // Direction locking: If vertical delta dominates, yield to normal page scroll
+    // Direction locking: If vertical delta dominates, immediately yield to normal vertical page scroll
     if (!isHorizontalDrag.current && !isVerticalScroll.current) {
-      // More sensitive vertical detection for mobile
-      const verticalThreshold = typeof window !== "undefined" && window.innerWidth < 768 ? 5 : 7;
-      if (Math.abs(dy) > verticalThreshold && Math.abs(dy) > Math.abs(dx)) {
+      if (Math.abs(dy) > 7 && Math.abs(dy) > Math.abs(dx)) {
         isVerticalScroll.current = true;
         isDragging.current = false;
+        pauseAutoScrollTemporarily(1000);
         return;
       }
-      if (Math.abs(dx) > 10 && elapsedTime > 100) {
+      if (Math.abs(dx) > 6) {
         isHorizontalDrag.current = true;
       }
     }
@@ -284,32 +360,21 @@ function TeamLane({
     if (isHorizontalDrag.current) {
       hasMoved.current = true;
       const now = performance.now();
-      const dt = now - lastTime.current;
+      const dt = now - lastDragTime.current;
       if (dt > 0) {
-        // Compute speed in px/frame (~16.6ms)
-        const instantSpeed = ((e.clientX - lastX.current) / dt) * 16.6;
-        momentumVel.current = Math.min(Math.max(instantSpeed, -18), 18);
+        const instantSpeed = -((e.clientX - lastDragX.current) / dt) * 16.6;
+        momentumVel.current = Math.min(Math.max(instantSpeed, -24), 24);
       }
-      lastX.current = e.clientX;
-      lastTime.current = now;
+      lastDragX.current = e.clientX;
+      lastDragTime.current = now;
 
-      posX.current = startOffset.current + dx;
-
-      // Wrap immediately during drag
-      const W = cycleWidth.current;
-      if (W > 0) {
-        while (posX.current < -W) posX.current += W;
-        while (posX.current > 0) posX.current -= W;
-      }
-
-      if (trackRef.current) {
-        trackRef.current.style.transform = `translate3d(${posX.current}px, 0, 0)`;
-      }
+      scrollPos.current = dragStartScrollPos.current - dx;
+      renderCarousel();
     }
   };
 
   // Pointer Up / Cancel
-  const handlePointerUp = (e: React.PointerEvent) => {
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging.current) return;
     isDragging.current = false;
 
@@ -319,13 +384,73 @@ function TeamLane({
       // Ignore
     }
 
-    // Reset moved flag after a short delay so link clicks during drag are cancelled
+    pauseAutoScrollTemporarily(1500);
+
+    // Suppress clicks on member links for a brief moment after dragging
     setTimeout(() => {
       hasMoved.current = false;
-    }, 80);
+    }, 120);
   };
 
-  // Hover handlers to pause auto-drift
+  // Touch Handlers (Mobile touch-based horizontal swipe with vertical scroll protection)
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length !== 1) return;
+    isInteracting.current = true;
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+
+    dragStartX.current = e.touches[0].clientX;
+    dragStartY.current = e.touches[0].clientY;
+    dragStartScrollPos.current = scrollPos.current;
+    lastDragX.current = e.touches[0].clientX;
+    lastDragTime.current = performance.now();
+    momentumVel.current = 0;
+    hasMoved.current = false;
+    isHorizontalDrag.current = false;
+    isVerticalScroll.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length !== 1 || isVerticalScroll.current) return;
+
+    const dx = e.touches[0].clientX - dragStartX.current;
+    const dy = e.touches[0].clientY - dragStartY.current;
+
+    // Direction locking: If vertical delta dominates, yield immediately to normal browser page scroll
+    if (!isHorizontalDrag.current && !isVerticalScroll.current) {
+      if (Math.abs(dy) > 7 && Math.abs(dy) > Math.abs(dx)) {
+        isVerticalScroll.current = true;
+        pauseAutoScrollTemporarily(1000);
+        return;
+      }
+      if (Math.abs(dx) > 6) {
+        isHorizontalDrag.current = true;
+      }
+    }
+
+    if (isHorizontalDrag.current) {
+      hasMoved.current = true;
+      const now = performance.now();
+      const dt = now - lastDragTime.current;
+      if (dt > 0) {
+        const instantSpeed = -((e.touches[0].clientX - lastDragX.current) / dt) * 16.6;
+        momentumVel.current = Math.min(Math.max(instantSpeed, -24), 24);
+      }
+      lastDragX.current = e.touches[0].clientX;
+      lastDragTime.current = now;
+
+      scrollPos.current = dragStartScrollPos.current - dx;
+      renderCarousel();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    pauseAutoScrollTemporarily(1500);
+    setTimeout(() => {
+      hasMoved.current = false;
+    }, 120);
+  };
+
+  // Hover handlers to pause auto-movement while reading cards
   const handleMouseEnter = () => {
     isHovering.current = true;
   };
@@ -334,18 +459,35 @@ function TeamLane({
     isHovering.current = false;
   };
 
-  // Touch handlers for mobile hover-like behavior
-  const handleTouchStart = () => {
-    isHovering.current = true;
+  // Trackpad / Shift-Wheel horizontal scroll handler
+  const handleWheel = (e: React.WheelEvent) => {
+    // If trackpad horizontal scroll or user holding Shift
+    if (Math.abs(e.deltaX) > 0 || (e.shiftKey && Math.abs(e.deltaY) > 0)) {
+      const delta = Math.abs(e.deltaX) > 0 ? e.deltaX : e.deltaY;
+      scrollPos.current += delta;
+      renderCarousel();
+      pauseAutoScrollTemporarily(1500);
+    }
   };
 
-  const handleTouchEnd = () => {
-    // Brief delay to allow tap/click to register before resuming
-    setTimeout(() => {
-      isHovering.current = false;
-    }, 150);
+  // Keyboard navigation for accessible horizontal scrolling
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowLeft") {
+      pauseAutoScrollTemporarily(2000);
+      scrollPos.current -= 180;
+      renderCarousel();
+    } else if (e.key === "ArrowRight") {
+      pauseAutoScrollTemporarily(2000);
+      scrollPos.current += 180;
+      renderCarousel();
+    }
   };
 
+  const handleFocus = () => {
+    pauseAutoScrollTemporarily(3000);
+  };
+
+  // Prevent link click when user has been dragging
   const handleLinkClick = (e: React.MouseEvent) => {
     if (hasMoved.current) {
       e.preventDefault();
@@ -353,110 +495,15 @@ function TeamLane({
     }
   };
 
-  // Increase clickable area for social links on touch devices
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const linkHitAreaStyle = {
-    width: '44px',
-    height: '44px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  } as React.CSSProperties;
-
-  return (
-    <div
-      ref={containerRef}
-      role="region"
-      aria-label={laneAriaLabel}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      className="relative w-full overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing select-none"
-    >
-      {/* Lateral gradient edge fade masks */}
-      <div
-        aria-hidden="true"
-        className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"
-      />
-
-      {/* Moving Track */}
-      <div
-        ref={trackRef}
-        className="flex items-start w-max will-change-transform"
-      >
-        {/* Cycle A: Primary accessible member instances */}
-        <div
-          ref={cycleRef}
-          className="flex items-start gap-3 sm:gap-4 md:gap-5 pr-3 sm:pr-4 md:pr-5 shrink-0"
-        >
-          {cycleMembers.map((member, idx) => (
-            <MemberCard
-              key={`primary-${member.id || idx}-${idx}`}
-              member={member}
-              isClone={false}
-              onLinkClick={handleLinkClick}
-            />
-          ))}
-        </div>
-
-        {/* Cycle B: Cloned sequence for continuous seamless loop */}
-        <div
-          aria-hidden="true"
-          className="flex items-start gap-3 sm:gap-4 md:gap-5 pr-3 sm:pr-4 md:pr-5 shrink-0 select-none"
-        >
-          {cycleMembers.map((member, idx) => (
-            <MemberCard
-              key={`clone-${member.id || idx}-${idx}`}
-              member={member}
-              isClone={true}
-              onLinkClick={handleLinkClick}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Stable deterministic combined roster: TEAM_MEMBERS + ALUMNI_MEMBERS
-const ALUMNI_AS_MEMBERS: MemberItem[] = ALUMNI_MEMBERS.map((alumnus: AlumniItem) => ({
-  id: alumnus.id,
-  name: alumnus.name,
-  role: alumnus.formerRole,
-  bio: alumnus.contributions,
-  links: alumnus.links,
-  placeholder: false,
-}));
-
-const ALL_PEOPLE: MemberItem[] = [...TEAM_MEMBERS, ...ALUMNI_AS_MEMBERS];
-
-export function TeamSection() {
-  const reducedMotion = usePrefersReducedMotion();
-
-  // Split authentic members deterministically across two independent horizontal rows
-  // Row 1: even indices, drifts right (→)
-  // Row 2: odd indices, drifts left (←)
-  const row1Members = ALL_PEOPLE.filter((_, idx) => idx % 2 === 0);
-  const row2Members = ALL_PEOPLE.filter((_, idx) => idx % 2 !== 0);
-
   return (
     <section
       id="team"
       aria-label="People: Team and Alumni Roster"
-      className="relative w-full text-white bg-transparent py-10 sm:py-16 lg:py-20 overflow-hidden select-none"
+      className="relative w-full text-white bg-transparent py-10 sm:py-16 lg:py-20 select-none overflow-hidden"
     >
       <span id="people" className="sr-only" aria-hidden="true" />
       <div className="w-full max-w-[1240px] mx-auto px-6 sm:px-10 lg:px-12 flex flex-col mb-6 sm:mb-8">
-        {/* Clean PEOPLE Identifier */}
+        {/* Clean PEOPLE Header (Member-count label removed) */}
         <div className="border-b border-white/[0.08] pb-3">
           <h2 className="text-xs sm:text-sm font-mono tracking-[0.24em] uppercase text-white/80 font-medium">
             PEOPLE
@@ -464,23 +511,58 @@ export function TeamSection() {
         </div>
       </div>
 
-      {/* Two-Lane Continuous Horizontal People Roster */}
-      <div className="flex flex-col space-y-4 sm:space-y-6 w-full">
-        {/* ROW 1: Continuously moves rightward (→) */}
-        <TeamLane
-          members={row1Members}
-          direction="right"
-          reducedMotion={reducedMotion}
-          laneAriaLabel="People Roster Lane 1"
+      {/* Single Horizontal Row: Seamless Continuous Circular Loop (Unique Members Only, No Clones) */}
+      <div className="relative w-full max-w-full min-w-0 overflow-hidden select-none">
+        {/* Lateral gradient edge fade masks */}
+        <div
+          aria-hidden="true"
+          className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"
         />
 
-        {/* ROW 2: Continuously moves leftward (←) */}
-        <TeamLane
-          members={row2Members}
-          direction="left"
-          reducedMotion={reducedMotion}
-          laneAriaLabel="People Roster Lane 2"
-        />
+        {/* Scrollable Track with Continuous Circular Loop + Manual Drag/Touch/Wheel */}
+        <div
+          role="region"
+          aria-label="Team Members Roster"
+          tabIndex={0}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onWheel={handleWheel}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          className="w-full min-w-0 max-w-full overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing px-6 sm:px-10 lg:px-12 focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-400/50"
+        >
+          <div
+            ref={trackRef}
+            className="flex items-start gap-3 sm:gap-4 md:gap-5 w-max shrink-0 py-1 will-change-transform"
+          >
+            {ALL_PEOPLE.map((member, idx) => (
+              <div
+                key={member.id || `member-${idx}`}
+                ref={(el) => {
+                  cardRefs.current[idx] = el;
+                }}
+                className="shrink-0 will-change-transform"
+              >
+                <MemberCard
+                  member={member}
+                  onLinkClick={handleLinkClick}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

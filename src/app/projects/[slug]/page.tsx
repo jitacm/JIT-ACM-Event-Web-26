@@ -94,7 +94,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* Links */}
         <div className="flex flex-wrap gap-4 pt-6">
-          {project.repoUrl && (
+          {project.repoUrl ? (
             <a
               href={project.repoUrl}
               target="_blank"
@@ -104,6 +104,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <span>SOURCE REPOSITORY</span>
               <Diamond size={4} filled={true} />
             </a>
+          ) : (
+            <span className="font-mono text-xs uppercase tracking-[0.2em] border border-white/10 text-white/40 px-4 py-2 inline-flex items-center gap-2 cursor-default select-none">
+              <span>REPOSITORY UNAVAILABLE</span>
+            </span>
           )}
           {project.url && project.url !== "#demo" && (
             <a
