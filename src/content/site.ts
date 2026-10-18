@@ -9,7 +9,11 @@ export const SITE_CONFIG = {
   shortDescription:
     "A living computing community grounded in computational rigor, research, and craft.",
   institutionalLine: "Association for Computing Machinery · Student Chapter",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://acm-face.org",
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "https://jit-acm.vercel.app"),
   year: 2026,
   scrollTarget: "#about",
 } as const;
@@ -71,11 +75,21 @@ export const FOOTER_FOCUS_NAV = [
   { label: "Contact", href: "mailto:contact@acm-face.org" },
 ] as const;
 
+export const SITE_SOCIAL_LINKS = {
+  x: "https://x.com/jit_acm",
+  discord: "https://discord.gg/j3b4gw2QK",
+  instagram: "https://www.instagram.com/acm_jit/",
+  linkedin: "https://www.linkedin.com/in/jit-acm-student-chapter/?isSelfProfile=false",
+  githubProfile: "https://github.com/jitacm",
+  repository: "https://github.com/jitacm/JIT-ACM-Offcial-Website",
+} as const;
+
 export const FOOTER_DATA = {
   wordmark: "JIT ACM",
   tagline: "ADVANCING COMPUTING. BUILDING PEOPLE.",
   institutionalNote: "ACM Student Chapter · Computing Society & Systems Research Forum",
   copyright: "© 2026 JIT ACM. All rights reserved.",
-  githubUrl: "https://github.com/acm-face",
+  githubUrl: SITE_SOCIAL_LINKS.githubProfile,
+  repoUrl: SITE_SOCIAL_LINKS.repository,
 };
 

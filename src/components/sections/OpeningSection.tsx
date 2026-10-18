@@ -210,6 +210,7 @@ export function OpeningSection() {
       aria-label="JIT ACM Student Chapter Introduction"
       className="relative w-full min-h-[92svh] sm:min-h-[100svh] flex flex-col justify-between pt-28 sm:pt-32 pb-12 sm:pb-16 px-6 sm:px-10 lg:px-16 text-white overflow-hidden will-change-transform"
     >
+      <span id="opening" className="sr-only" aria-hidden="true" />
       <div className="w-full max-w-[1440px] mx-auto flex flex-col justify-between flex-1 relative">
         {/* Top Meta Line: Chapter Identity */}
         <div

@@ -12,10 +12,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined) ||
+  "https://jit-acm.vercel.app";
 
 export const metadata: Metadata = {
-  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+  metadataBase: new URL(siteUrl),
   title: {
     default: "JIT ACM — A Living Computing Community",
     template: "%s · JIT ACM",

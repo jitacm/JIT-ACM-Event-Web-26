@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Diamond } from "@/components/ui/Diamond";
 import { usePrefersReducedMotion } from "@/lib/motion/tokens";
+import { SITE_SOCIAL_LINKS } from "@/content/site";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -58,11 +59,11 @@ function DiscordIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
 }
 
 const SOCIAL_LINKS = [
-  { label: "X", href: "https://x.com/acm_face", icon: XIcon, primary: false },
-  { label: "LinkedIn", href: "https://linkedin.com/company/acm-face", icon: LinkedInIcon, primary: false },
-  { label: "Instagram", href: "https://instagram.com/acmface", icon: InstagramIcon, primary: false },
-  { label: "Discord", href: "https://discord.gg/acm-face", icon: DiscordIcon, primary: false },
-  { label: "GitHub", href: "https://github.com/acm-face", icon: GitHubIcon, primary: true },
+  { label: "X", href: SITE_SOCIAL_LINKS.x, icon: XIcon, primary: false },
+  { label: "LinkedIn", href: SITE_SOCIAL_LINKS.linkedin, icon: LinkedInIcon, primary: false },
+  { label: "Instagram", href: SITE_SOCIAL_LINKS.instagram, icon: InstagramIcon, primary: false },
+  { label: "Discord", href: SITE_SOCIAL_LINKS.discord, icon: DiscordIcon, primary: false },
+  { label: "GitHub", href: SITE_SOCIAL_LINKS.githubProfile, icon: GitHubIcon, primary: true },
 ];
 
 export function Header() {

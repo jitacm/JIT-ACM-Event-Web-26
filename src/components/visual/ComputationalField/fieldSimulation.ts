@@ -289,7 +289,7 @@ export function createSimulationState(
   const acmFaceTargets = getIdentityTargets(
     {
       type: "text",
-      text: "ACM FACE",
+      text: "JIT ACM",
       fontSize: fontSizeFace,
       fontWeight: "600",
       letterSpacing: isMobile ? 6 : 10,
