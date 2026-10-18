@@ -80,8 +80,8 @@ function MemberCard({
   const linkedinUrl = findLink(member.links, "linkedin");
 
   const linkHitAreaStyle = {
-    width: "44px",
-    height: "44px",
+    width: "36px",
+    height: "36px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -90,9 +90,9 @@ function MemberCard({
   const showPhoto = Boolean(member.photo && !member.placeholder && !imageError);
 
   return (
-    <div className="flex flex-col min-w-[130px] max-w-[170px] w-full sm:min-w-[150px] md:min-w-[170px] shrink-0 select-none group">
-      {/* Compact Portrait Frame with solid dark backdrop preventing particle bleed-through */}
-      <div className="relative w-full aspect-square overflow-hidden bg-[#0d0f14] border border-white/[0.08] group-hover:border-white/20 transition-colors duration-300 mb-2 sm:mb-2.5 flex items-center justify-center">
+    <div className="flex flex-col w-full shrink-0 select-none group rounded-xl p-2.5 sm:p-3 bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.10] hover:border-white/[0.22] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] transition-all duration-300">
+      {/* Compact Portrait Frame with softly rounded edges and solid dark backdrop */}
+      <div className="relative w-full aspect-square overflow-hidden rounded-[10px] bg-[#0d0f14] border border-white/[0.08] group-hover:border-white/18 transition-colors duration-300 mb-2 sm:mb-2.5 flex items-center justify-center">
         {showPhoto ? (
           <Image
             src={member.photo!}
@@ -100,8 +100,8 @@ function MemberCard({
             fill
             unoptimized
             draggable={false}
-            className="object-cover select-none pointer-events-none"
-            sizes="(max-width: 640px) 130px, (max-width: 768px) 150px, 170px"
+            className="object-cover rounded-[10px] select-none pointer-events-none"
+            sizes="(max-width: 640px) 145px, (max-width: 768px) 160px, 175px"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -123,7 +123,7 @@ function MemberCard({
 
       {/* Social Links */}
       {(linkedinUrl || githubUrl) && (
-        <div className="flex items-center gap-2.5 mt-1.5 text-white/40 relative z-20">
+        <div className="flex items-center gap-1.5 sm:gap-2 mt-2 text-white/40 relative z-20">
           {linkedinUrl && (
             <a
               href={linkedinUrl}
@@ -150,7 +150,7 @@ function MemberCard({
                 }
               }}
             >
-              <LinkedInIcon className="w-5 h-5 pointer-events-none" />
+              <LinkedInIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 pointer-events-none" />
             </a>
           )}
           {githubUrl && (
@@ -179,7 +179,7 @@ function MemberCard({
                 }
               }}
             >
-              <GitHubIcon className="w-4 h-4 pointer-events-none" />
+              <GitHubIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none" />
             </a>
           )}
         </div>
@@ -243,12 +243,10 @@ export function TeamSection() {
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
     if (cards.length < 2) return;
 
-    const cardWidth = cards[0].offsetWidth || 170;
-    const firstOffset = cards[0].offsetLeft;
-    const secondOffset = cards[1].offsetLeft;
-    const pitch = secondOffset - firstOffset || (cardWidth + 20);
-    const totalWidth = cards.length * pitch;
+    const cardWidth = cards[0].offsetWidth || 145;
     const baseOffsets = cards.map((c) => c.offsetLeft);
+    const pitch = (baseOffsets[1] - baseOffsets[0]) || (cardWidth + 14);
+    const totalWidth = cards.length * pitch;
 
     metrics.current = {
       cardWidth,
@@ -337,20 +335,24 @@ export function TeamSection() {
 
     animId = requestAnimationFrame(tick);
 
-    // ResizeObserver to recalibrate on breakpoint changes, font loading, or orientation change
-    const ro = new ResizeObserver(() => {
+    const handleResize = () => {
       updateMetrics();
       lastShifts.current = [];
       renderCarousel();
-    });
+    };
+
+    const ro = new ResizeObserver(handleResize);
 
     if (trackRef.current) {
       ro.observe(trackRef.current);
     }
 
+    window.addEventListener("resize", handleResize);
+
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
+      window.removeEventListener("resize", handleResize);
       if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
     };
   }, [reducedMotion, renderCarousel, updateMetrics]);
@@ -604,7 +606,7 @@ export function TeamSection() {
                 ref={(el) => {
                   cardRefs.current[idx] = el;
                 }}
-                className="shrink-0 will-change-transform"
+                className="w-[145px] sm:w-[160px] md:w-[175px] shrink-0 will-change-transform"
               >
                 <MemberCard
                   member={member}
