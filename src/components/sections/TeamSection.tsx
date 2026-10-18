@@ -47,8 +47,19 @@ function getInitials(name: string): string {
     .toUpperCase();
 }
 
+function formatExternalUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  const trimmed = url.trim();
+  if (!trimmed) return undefined;
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
+
 function findLink(links: MemberLink[] | undefined, kind: "github" | "linkedin"): string | undefined {
-  return links?.find((link) => link.label.toLowerCase().includes(kind))?.url;
+  const found = links?.find((link) => link.label.toLowerCase().includes(kind))?.url;
+  return formatExternalUrl(found);
 }
 
 /**
@@ -57,9 +68,11 @@ function findLink(links: MemberLink[] | undefined, kind: "github" | "linkedin"):
 function MemberCard({
   member,
   onLinkClick,
+  onLinkHover,
 }: {
   member: MemberItem;
   onLinkClick?: (e: React.MouseEvent) => void;
+  onLinkHover?: () => void;
 }) {
   const [imageError, setImageError] = useState(false);
   const initials = getInitials(member.name);
@@ -110,18 +123,34 @@ function MemberCard({
 
       {/* Social Links */}
       {(linkedinUrl || githubUrl) && (
-        <div className="flex items-center gap-2.5 mt-1.5 text-white/40">
+        <div className="flex items-center gap-2.5 mt-1.5 text-white/40 relative z-20">
           {linkedinUrl && (
             <a
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={onLinkClick}
               aria-label={`${member.name} on LinkedIn`}
-              className="hover:text-white transition-colors focus-visible:outline-sky-400"
+              className="cursor-pointer relative z-20 hover:text-white transition-colors focus-visible:outline-sky-400"
               style={linkHitAreaStyle}
+              onMouseEnter={onLinkHover}
+              onFocus={onLinkHover}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onLinkClick) {
+                  onLinkClick(e);
+                }
+              }}
             >
-              <LinkedInIcon className="w-5 h-5" />
+              <LinkedInIcon className="w-5 h-5 pointer-events-none" />
             </a>
           )}
           {githubUrl && (
@@ -129,12 +158,28 @@ function MemberCard({
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={onLinkClick}
               aria-label={`${member.name} on GitHub`}
-              className="hover:text-white transition-colors focus-visible:outline-sky-400"
+              className="cursor-pointer relative z-20 hover:text-white transition-colors focus-visible:outline-sky-400"
               style={linkHitAreaStyle}
+              onMouseEnter={onLinkHover}
+              onFocus={onLinkHover}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onLinkClick) {
+                  onLinkClick(e);
+                }
+              }}
             >
-              <GitHubIcon className="w-4 h-4" />
+              <GitHubIcon className="w-4 h-4 pointer-events-none" />
             </a>
           )}
         </div>
@@ -313,6 +358,7 @@ export function TeamSection() {
   // Pointer Down (Desktop mouse click-and-drag start)
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest("a, button")) return;
     // Mobile touches are handled via touch listeners to avoid pointer capture gesture conflicts
     if (e.pointerType === "touch") return;
 
@@ -395,6 +441,7 @@ export function TeamSection() {
   // Touch Handlers (Mobile touch-based horizontal swipe with vertical scroll protection)
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (e.touches.length !== 1) return;
+    if ((e.target as HTMLElement).closest("a, button")) return;
     isInteracting.current = true;
     if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
 
@@ -495,6 +542,10 @@ export function TeamSection() {
     }
   };
 
+  const handleLinkHover = useCallback(() => {
+    pauseAutoScrollTemporarily(3000);
+  }, [pauseAutoScrollTemporarily]);
+
   return (
     <section
       id="team"
@@ -558,6 +609,7 @@ export function TeamSection() {
                 <MemberCard
                   member={member}
                   onLinkClick={handleLinkClick}
+                  onLinkHover={handleLinkHover}
                 />
               </div>
             ))}
