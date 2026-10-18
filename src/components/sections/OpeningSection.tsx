@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import { Diamond } from "@/components/ui/Diamond";
 import { Hairline } from "@/components/ui/Hairline";
 import { usePrefersReducedMotion } from "@/lib/motion/tokens";
@@ -218,7 +219,14 @@ export function OpeningSection() {
           className="flex items-center justify-between font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-white/50 border-b border-white/[0.14] pb-5"
         >
           <div className="flex items-center gap-3">
-            <Diamond size={6} filled={true} />
+            <Image
+              src="/images/jit-acm-logo.png"
+              alt="JIT ACM Logo"
+              width={20}
+              height={20}
+              className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0"
+              priority
+            />
             <span className="text-white/90">JIT ACM // CHAPTER 01</span>
           </div>
         </div>

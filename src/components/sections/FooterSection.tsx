@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { FOOTER_FOCUS_NAV, FOOTER_DATA } from "@/content/site";
 import { usePrefersReducedMotion } from "@/lib/motion/tokens";
 import { registerScrollTrigger, gsap } from "@/lib/motion/gsap";
@@ -404,7 +405,14 @@ export function FooterSection() {
         </div>
 
         {/* STRONG IDENTITY / WORDMARK */}
-        <div ref={identityRef} className="will-change-transform mb-8 sm:mb-12">
+        <div ref={identityRef} className="will-change-transform mb-8 sm:mb-12 flex items-center gap-4 sm:gap-6 lg:gap-8">
+          <Image
+            src="/images/jit-acm-logo.png"
+            alt="JIT ACM Logo"
+            width={96}
+            height={96}
+            className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain shrink-0"
+          />
           <h2
             ref={identityTextRef}
             className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-tight text-white select-none leading-none"
@@ -477,9 +485,16 @@ export function FooterSection() {
             <span className="text-white/25 select-none" aria-hidden="true">·</span>
             <span className="text-white/50">Webmaster</span>
           </div>
-          <span className="text-[9px] text-white/30 tracking-[0.22em]">
-            JIT ACM STUDENT CHAPTER
-          </span>
+          <div className="flex items-center gap-2 text-[9px] text-white/30 tracking-[0.22em]">
+            <Image
+              src="/images/jit-acm-logo.png"
+              alt="JIT ACM"
+              width={14}
+              height={14}
+              className="w-3.5 h-3.5 object-contain opacity-60"
+            />
+            <span>JIT ACM STUDENT CHAPTER</span>
+          </div>
         </div>
       </div>
     </footer>
