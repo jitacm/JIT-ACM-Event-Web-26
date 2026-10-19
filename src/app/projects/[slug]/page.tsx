@@ -22,12 +22,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!project) {
     return {
-      title: "Project Not Found · JIT ACM",
+      title: "Project Not Found · JIT ACM Student Chapter",
     };
   }
 
   return {
-    title: `${project.title} · JIT ACM Projects`,
+    title: `${project.title} · JIT ACM Student Chapter Projects`,
     description: project.summary,
   };
 }
@@ -49,7 +49,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white flex items-center gap-2 transition-colors focus-visible:outline-white inline-flex py-2"
         >
           <span>←</span>
-          <span>RETURN TO PROJECTS</span>
+          <span>Back to Projects</span>
         </Link>
       </nav>
 
@@ -57,7 +57,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       <main className="max-w-4xl">
         <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-white/50 mb-6">
           <Diamond size={6} filled={true} />
-          <span>PROJECT PROFILE</span>
+          <span>PROJECT OVERVIEW</span>
         </div>
 
         <h1
@@ -77,7 +77,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         {project.tags && project.tags.length > 0 && (
           <div className="mb-10">
             <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-white/50 mb-4">
-              COMPUTATIONAL STACK
+              TECHNOLOGIES USED
             </h2>
             <div className="flex flex-wrap gap-2">
               {project.tags.map((tag) => (
@@ -99,14 +99,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-xs uppercase tracking-[0.2em] border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-colors focus-visible:outline-white inline-flex items-center gap-2"
+              className="font-mono text-xs uppercase tracking-[0.2em] border border-white/20 px-5 py-2.5 hover:bg-white hover:text-black transition-colors focus-visible:outline-white inline-flex items-center gap-2 font-medium"
             >
-              <span>SOURCE REPOSITORY</span>
+              <span>View on GitHub</span>
               <Diamond size={4} filled={true} />
             </a>
           ) : (
-            <span className="font-mono text-xs uppercase tracking-[0.2em] border border-white/10 text-white/40 px-4 py-2 inline-flex items-center gap-2 cursor-default select-none">
-              <span>REPOSITORY UNAVAILABLE</span>
+            <span className="font-mono text-xs uppercase tracking-[0.2em] border border-white/10 text-white/40 px-5 py-2.5 inline-flex items-center gap-2 cursor-default select-none">
+              <span>Repository Unavailable</span>
             </span>
           )}
           {project.url && project.url !== "#demo" && (
@@ -114,9 +114,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-xs uppercase tracking-[0.2em] border border-white/20 px-4 py-2 hover:bg-white hover:text-black transition-colors focus-visible:outline-white inline-flex items-center gap-2"
+              className="font-mono text-xs uppercase tracking-[0.2em] border border-white/20 px-5 py-2.5 hover:bg-white hover:text-black transition-colors focus-visible:outline-white inline-flex items-center gap-2 font-medium"
             >
-              <span>LIVE DEMO</span>
+              <span>Live Demo</span>
               <Diamond size={4} filled={true} />
             </a>
           )}

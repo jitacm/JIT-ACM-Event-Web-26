@@ -22,11 +22,11 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "JIT ACM — A Living Computing Community",
-    template: "%s · JIT ACM",
+    default: "JIT ACM Student Chapter",
+    template: "%s · JIT ACM Student Chapter",
   },
   description:
-    "A living computing community grounded in computational rigor, research, and craft.",
+    "Official student chapter of the Association for Computing Machinery at JIT. Fostering technical excellence, open-source engineering, and collaborative computing.",
   alternates: {
     canonical: "/",
   },
@@ -36,24 +36,25 @@ export const metadata: Metadata = {
     "JIT ACM Student Chapter",
     "Computing Community",
     "Computer Science",
-    "Systems Rigor",
-    "Algorithms",
+    "Student Chapter",
+    "Workshops",
+    "Hackathons",
     "Open Source",
   ],
   authors: [{ name: "JIT ACM Student Chapter" }],
   openGraph: {
-    title: "JIT ACM — A Living Computing Community",
+    title: "JIT ACM Student Chapter",
     description:
-      "A living computing community grounded in computational rigor, research, and craft.",
-    siteName: "JIT ACM",
+      "Official student chapter of the Association for Computing Machinery at JIT. Fostering technical excellence, open-source engineering, and collaborative computing.",
+    siteName: "JIT ACM Student Chapter",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "JIT ACM — A Living Computing Community",
+    title: "JIT ACM Student Chapter",
     description:
-      "A living computing community grounded in computational rigor, research, and craft.",
+      "Official student chapter of the Association for Computing Machinery at JIT. Fostering technical excellence, open-source engineering, and collaborative computing.",
   },
   robots: {
     index: true,
@@ -75,11 +76,11 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "JIT ACM",
-    alternateName: "JIT ACM Student Chapter",
-    url: siteUrl || "https://acm-face.org",
+    name: "JIT ACM Student Chapter",
+    alternateName: "JIT ACM",
+    url: siteUrl || "https://jit-acm.vercel.app",
     description:
-      "A living computing community grounded in computational rigor, research, and craft.",
+      "Official student chapter of the Association for Computing Machinery at JIT. Fostering technical excellence, open-source engineering, and collaborative computing.",
   };
 
   return (

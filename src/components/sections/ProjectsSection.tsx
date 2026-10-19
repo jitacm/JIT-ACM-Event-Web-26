@@ -23,7 +23,7 @@ export const REPOSITORIES: RepoItem[] = [
     title: "JIT ACM Official Website",
     org: "jitacm",
     name: "JIT-ACM-Offcial-Website",
-    summary: "Official website source repository.",
+    summary: "The official digital platform and web presence of the JIT ACM Student Chapter, architected with Next.js and TypeScript.",
     language: "TypeScript",
     languageColor: "#3178c6",
     category: "Web",
@@ -35,7 +35,7 @@ export const REPOSITORIES: RepoItem[] = [
     title: "JIT ACM Web 26",
     org: "jitacm",
     name: "JIT-ACM-Web-26",
-    summary: "Link to the JIT ACM Web 26 repository.",
+    summary: "Core open-source codebase, UI components, and technical resources engineered for chapter web initiatives.",
     language: "TypeScript",
     languageColor: "#3178c6",
     category: "Web",
@@ -151,7 +151,7 @@ export function ProjectsSection() {
     >
       <div className="w-full max-w-[1240px] mx-auto px-6 sm:px-10 lg:px-12 flex flex-col">
         {/* Quiet Architectural Datum Hairline with Directional Asymmetry */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 font-mono text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.24em] text-white/35 pb-3.5 mb-8 sm:mb-10 border-b border-white/[0.08] max-w-[92%] mr-auto w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 font-mono text-[10px] uppercase tracking-[0.18em] sm:tracking-[0.24em] text-white/35 pb-3.5 mb-6 sm:mb-8 border-b border-white/[0.08] max-w-[92%] mr-auto w-full">
           <div className="flex items-center gap-2.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
             <span className="text-white/80 font-medium">REPOSITORIES</span>
@@ -164,6 +164,20 @@ export function ProjectsSection() {
             <span className="text-white/20">·</span>
             <span className="text-white/50">OPEN SOURCE</span>
           </div>
+        </div>
+
+        {/* Section Header */}
+        <div className="mb-6 sm:mb-8">
+          <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400/80 mb-2 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
+            <span>CHAPTER REPOSITORIES // OPEN-SOURCE</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase">
+            Open-Source Projects
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-xl leading-relaxed">
+            Production codebases, web applications, and developer tooling architected and maintained by the JIT ACM Student Chapter.
+          </p>
         </div>
         {/* 2-Column Desktop / 1-Column Mobile GitHub-Style Repository Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 w-full">

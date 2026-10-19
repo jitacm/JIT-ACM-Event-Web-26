@@ -548,19 +548,28 @@ export function TeamSection() {
     pauseAutoScrollTemporarily(3000);
   }, [pauseAutoScrollTemporarily]);
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <section
       id="team"
-      aria-label="People: Team and Alumni Roster"
+      aria-label={`Team ${currentYear}: Chapter Roster`}
       className="relative w-full text-white bg-transparent py-10 sm:py-16 lg:py-20 select-none overflow-hidden"
     >
       <span id="people" className="sr-only" aria-hidden="true" />
       <div className="w-full max-w-[1240px] mx-auto px-6 sm:px-10 lg:px-12 flex flex-col mb-6 sm:mb-8">
-        {/* Clean PEOPLE Header (Member-count label removed) */}
-        <div className="border-b border-white/[0.08] pb-3">
-          <h2 className="text-xs sm:text-sm font-mono tracking-[0.24em] uppercase text-white/80 font-medium">
-            PEOPLE
+        {/* Team Section Header with Dynamic Current Year */}
+        <div className="border-b border-white/[0.08] pb-4">
+          <div className="font-mono text-xs uppercase tracking-[0.22em] text-sky-400/80 mb-2 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span>EXECUTIVE COMMITTEE & CORE MEMBERS</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase">
+            Team {currentYear}
           </h2>
+          <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-xl leading-relaxed">
+            The executive committee, technical leads, and core coordinators guiding the JIT ACM Student Chapter.
+          </p>
         </div>
       </div>
 

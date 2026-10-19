@@ -405,20 +405,25 @@ export function FooterSection() {
         </div>
 
         {/* STRONG IDENTITY / WORDMARK */}
-        <div ref={identityRef} className="will-change-transform mb-8 sm:mb-12 flex items-center gap-4 sm:gap-6 lg:gap-8">
+        <div ref={identityRef} className="will-change-transform mb-8 sm:mb-12 flex items-center gap-5 sm:gap-7 lg:gap-9">
           <Image
             src="/images/jit-acm-logo.png"
-            alt="JIT ACM Logo"
-            width={96}
-            height={96}
-            className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 object-contain shrink-0"
+            alt="JIT ACM Student Chapter Logo"
+            width={112}
+            height={112}
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(56,189,248,0.25)]"
           />
-          <h2
-            ref={identityTextRef}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-tight text-white select-none leading-none"
-          >
-            JIT ACM
-          </h2>
+          <div className="flex flex-col">
+            <h2
+              ref={identityTextRef}
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight text-white select-none leading-none"
+            >
+              JIT ACM
+            </h2>
+            <span className="text-lg sm:text-2xl md:text-3xl text-sky-200/85 font-light tracking-normal mt-1 sm:mt-2">
+              Student Chapter
+            </span>
+          </div>
         </div>
 
         {/* Directional Hairline 1: Resolves from the LEFT */}
@@ -485,13 +490,13 @@ export function FooterSection() {
             <span className="text-white/25 select-none" aria-hidden="true">·</span>
             <span className="text-white/50">Webmaster</span>
           </div>
-          <div className="flex items-center gap-2 text-[9px] text-white/30 tracking-[0.22em]">
+          <div className="flex items-center gap-2 text-[9px] sm:text-[10px] text-white/40 tracking-[0.2em]">
             <Image
               src="/images/jit-acm-logo.png"
-              alt="JIT ACM"
-              width={14}
-              height={14}
-              className="w-3.5 h-3.5 object-contain opacity-60"
+              alt="JIT ACM Student Chapter Logo"
+              width={20}
+              height={20}
+              className="w-5 h-5 object-contain opacity-85 shrink-0"
             />
             <span>JIT ACM STUDENT CHAPTER</span>
           </div>

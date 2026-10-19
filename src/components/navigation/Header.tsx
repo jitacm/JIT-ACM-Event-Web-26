@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Events", href: "#events" },
   { label: "Projects", href: "#projects" },
-  { label: "People", href: "#team" },
+  { label: "Team", href: "#team" },
 ] as const;
 
 function GitHubIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
@@ -194,18 +194,21 @@ export function Header() {
             {/* Left: Identity / Wordmark */}
             <a
               href="#hero"
-              className="flex items-center gap-2.5 sm:gap-3 text-white hover:text-white/80 transition-colors uppercase tracking-[0.16em] font-medium py-1"
-              aria-label="JIT ACM home"
+              className="flex items-center gap-2.5 sm:gap-3 text-white hover:text-white/80 transition-colors uppercase tracking-[0.14em] font-medium py-1"
+              aria-label="JIT ACM Student Chapter Home"
             >
               <Image
                 src="/images/jit-acm-logo.png"
-                alt="JIT ACM Logo"
-                width={36}
-                height={36}
-                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
+                alt="JIT ACM Student Chapter Logo"
+                width={40}
+                height={40}
+                className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 drop-shadow-[0_0_8px_rgba(56,189,248,0.25)]"
                 priority
               />
-              <span className="font-semibold tracking-wider">JIT ACM</span>
+              <span className="font-semibold tracking-wider flex items-center gap-1.5 text-xs sm:text-[13px]">
+                <span>JIT ACM</span>
+                <span className="hidden lg:inline text-white/50 text-[10px] tracking-widest font-normal">STUDENT CHAPTER</span>
+              </span>
             </a>
 
             {/* Desktop Nav Links (Quiet, elegant, uppercase tracking) */}
@@ -339,13 +342,13 @@ export function Header() {
             <div className="flex items-center gap-3">
               <Image
                 src="/images/jit-acm-logo.png"
-                alt="JIT ACM Logo"
-                width={36}
-                height={36}
-                className="w-7 h-7 sm:w-8 sm:h-8 object-contain shrink-0"
+                alt="JIT ACM Student Chapter Logo"
+                width={40}
+                height={40}
+                className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
               />
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/50">
-                JIT ACM · MENU
+              <span className="font-mono text-xs uppercase tracking-[0.16em] text-white/70 font-medium">
+                JIT ACM STUDENT CHAPTER
               </span>
             </div>
             <button
@@ -415,7 +418,7 @@ export function Header() {
           </div>
 
           <div className="flex items-center justify-between border-t border-white/[0.14] pt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">
-            <span>A LIVING COMPUTING COMMUNITY</span>
+            <span>ADVANCING COMPUTING. BUILDING PEOPLE.</span>
             <a
               href="#about"
               onClick={closeMenu}

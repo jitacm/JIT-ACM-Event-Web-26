@@ -4,24 +4,25 @@
  */
 
 export const SITE_CONFIG = {
-  name: "JIT ACM",
-  tagline: "A LIVING COMPUTING COMMUNITY",
+  name: "JIT ACM Student Chapter",
+  shortName: "JIT ACM",
+  tagline: "Advancing Computing. Building People.",
   shortDescription:
-    "A living computing community grounded in computational rigor, research, and craft.",
-  institutionalLine: "Association for Computing Machinery · Student Chapter",
+    "Official student chapter of the Association for Computing Machinery at JIT, advancing computer science education, technical craftsmanship, and collaborative engineering.",
+  institutionalLine: "Association for Computing Machinery · JIT Student Chapter",
   url:
     process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : "https://jit-acm.vercel.app"),
-  year: 2026,
+  year: new Date().getFullYear(),
   scrollTarget: "#about",
 } as const;
 
 export const HERO_STATEMENT = {
-  line1: "A living computing community",
-  line2: "grounded in computational rigor, research, and craft.",
-  scrollLabel: "Explore chapter ↓",
+  line1: "Advancing Computing.",
+  line2: "Building People.",
+  scrollLabel: "Explore Chapter ↓",
 };
 
 export interface Pillar {
@@ -35,27 +36,27 @@ export interface Pillar {
 export const ABOUT_PILLARS: Record<"people" | "events" | "projects" | "learning", Pillar> = {
   people: {
     id: "people",
-    title: "People",
-    description: "Students, researchers, and engineers convening in rigorous computational practice.",
+    title: "Community",
+    description: "A collaborative student-led engineering collective bridging computer science theory with practical craftsmanship and peer mentorship.",
     href: "#team",
   },
   events: {
     id: "events",
-    title: "Events",
-    description: "Colloquia, research sessions, and continuous builds exploring machine frontiers.",
+    title: "Events & Workshops",
+    description: "Technical masterclasses, competitive hackathons, and industry speaker sessions designed to advance practical engineering competencies.",
     href: "#events",
   },
   projects: {
     id: "projects",
     title: "Projects",
-    description: "Open-source platforms, systems implementations, and experimental software.",
+    description: "Production-grade web platforms, developer tooling, and collaborative software projects authored and maintained by chapter members.",
     href: "#projects",
   },
   learning: {
     id: "learning",
-    title: "Learning",
-    description: "Archival paper dissections, algorithmic rigor, and peer-to-peer technical mentorship.",
-    href: undefined,
+    title: "Learning & Mentorship",
+    description: "Peer code reviews, systems architecture discussions, and career guidance bridging curriculum study with industry technology standards.",
+    href: "#gallery",
     isInteractiveButton: true,
   },
 };
@@ -64,15 +65,15 @@ export const SITE_NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Events", href: "#events" },
   { label: "Projects", href: "#projects" },
-  { label: "People", href: "#team" },
+  { label: "Team", href: "#team" },
 ] as const;
 
 export const FOOTER_FOCUS_NAV = [
   { label: "About", href: "#about" },
   { label: "Events", href: "#events" },
   { label: "Projects", href: "#projects" },
-  { label: "People", href: "#team" },
-  { label: "Contact", href: "mailto:contact@acm-face.org" },
+  { label: "Team", href: "#team" },
+  { label: "Contact Us", href: "mailto:acm@jitnagpur.edu.in" },
 ] as const;
 
 export const SITE_SOCIAL_LINKS = {
@@ -85,10 +86,10 @@ export const SITE_SOCIAL_LINKS = {
 } as const;
 
 export const FOOTER_DATA = {
-  wordmark: "JIT ACM",
+  wordmark: "JIT ACM Student Chapter",
   tagline: "ADVANCING COMPUTING. BUILDING PEOPLE.",
-  institutionalNote: "ACM Student Chapter · Computing Society & Systems Research Forum",
-  copyright: "© 2026 JIT ACM. All rights reserved.",
+  institutionalNote: "Official Student Chapter of the Association for Computing Machinery · JIT",
+  copyright: `© ${new Date().getFullYear()} JIT ACM Student Chapter. All rights reserved.`,
   githubUrl: SITE_SOCIAL_LINKS.githubProfile,
   repoUrl: SITE_SOCIAL_LINKS.repository,
 };

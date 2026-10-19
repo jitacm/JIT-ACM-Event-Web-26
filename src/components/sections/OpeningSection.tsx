@@ -8,18 +8,18 @@ import { usePrefersReducedMotion } from "@/lib/motion/tokens";
 import { registerScrollTrigger, gsap } from "@/lib/motion/gsap";
 
 const COMMUNITY_PILLARS = [
-  "01 · SYSTEMS RIGOR",
-  "02 · ALGORITHMIC CRAFT",
-  "03 · OPEN RESEARCH",
-  "04 · COLLECTIVE LEARNING",
+  "01 · PRACTICAL ENGINEERING",
+  "02 · TECHNICAL WORKSHOPS",
+  "03 · OPEN SOURCE",
+  "04 · PEER MENTORSHIP",
 ];
 
 export function OpeningSection() {
   const containerRef = useRef<HTMLElement | null>(null);
   const editorialRef = useRef<HTMLDivElement | null>(null);
-  const logoRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const ctaRef = useRef<HTMLDivElement | null>(null);
   const metaRef = useRef<HTMLDivElement | null>(null);
   const pillarsRef = useRef<HTMLDivElement | null>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -32,8 +32,6 @@ export function OpeningSection() {
 
     const setX = gsap.quickTo(editorialRef.current, "x", { duration: 0.8, ease: "power2.out" });
     const setY = gsap.quickTo(editorialRef.current, "y", { duration: 0.8, ease: "power2.out" });
-    const setLogoX = logoRef.current ? gsap.quickTo(logoRef.current, "x", { duration: 1.2, ease: "power2.out" }) : null;
-    const setLogoY = logoRef.current ? gsap.quickTo(logoRef.current, "y", { duration: 1.2, ease: "power2.out" }) : null;
 
     const handlePointerMove = (e: PointerEvent) => {
       const { innerWidth, innerHeight } = window;
@@ -41,10 +39,6 @@ export function OpeningSection() {
       const ny = (e.clientY / innerHeight) * 2 - 1;
       setX(nx * 8);
       setY(ny * 6);
-      if (setLogoX && setLogoY) {
-        setLogoX(nx * 4);
-        setLogoY(ny * 3);
-      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -54,7 +48,7 @@ export function OpeningSection() {
   useEffect(() => {
     // If reduced motion is requested or motion is paused, ensure hero is immediately fully visible
     if (reducedMotion || (typeof document !== "undefined" && document.documentElement.getAttribute("data-motion") === "paused")) {
-      const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current, containerRef.current, logoRef.current];
+      const elements = [metaRef.current, titleRef.current, contentRef.current, ctaRef.current, pillarsRef.current, containerRef.current];
       elements.forEach((el) => {
         if (el) gsap.set(el, { opacity: 1, clearProps: "opacity,transform" });
       });
@@ -69,7 +63,7 @@ export function OpeningSection() {
         if (hasRevealed) return;
         hasRevealed = true;
 
-        const elements = [metaRef.current, titleRef.current, contentRef.current, pillarsRef.current, logoRef.current];
+        const elements = [metaRef.current, titleRef.current, contentRef.current, ctaRef.current, pillarsRef.current];
 
         // Failsafe: guarantee all hero text elements are 100% visible after at most 2.5s
         failsafeTimer = setTimeout(() => {
@@ -89,32 +83,22 @@ export function OpeningSection() {
           },
         });
 
-        if (logoRef.current) {
-          tl.fromTo(
-            logoRef.current,
-            { opacity: 0, scale: 0.88 },
-            { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" }
-          );
-        }
-
         if (metaRef.current) {
           tl.fromTo(
             metaRef.current,
             { opacity: 0, y: -12 },
-            { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
-            "-=0.8"
+            { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }
           );
         }
 
         if (titleRef.current) {
           tl.fromTo(
             titleRef.current,
-            { opacity: 0, y: 28, letterSpacing: "0.04em" },
+            { opacity: 0, y: 24 },
             {
               opacity: 1,
               y: 0,
-              letterSpacing: "-0.03em",
-              duration: 1.0,
+              duration: 0.9,
               ease: "power3.out",
             },
             "-=0.4"
@@ -127,6 +111,15 @@ export function OpeningSection() {
             { opacity: 0, y: 16 },
             { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
             "-=0.5"
+          );
+        }
+
+        if (ctaRef.current) {
+          tl.fromTo(
+            ctaRef.current,
+            { opacity: 0, y: 14 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
+            "-=0.4"
           );
         }
 
@@ -237,84 +230,114 @@ export function OpeningSection() {
           <div className="flex items-center gap-3">
             <Image
               src="/images/jit-acm-logo.png"
-              alt="JIT ACM Logo"
-              width={20}
-              height={20}
-              className="w-4 h-4 sm:w-5 sm:h-5 object-contain shrink-0"
+              alt="JIT ACM Student Chapter Logo"
+              width={28}
+              height={28}
+              className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0"
               priority
             />
-            <span className="text-white/90">JIT ACM // CHAPTER 01</span>
+            <span className="text-white/90 font-medium">JIT ACM STUDENT CHAPTER</span>
+          </div>
+          <div className="flex items-center gap-2 text-sky-300/80 text-[10px] sm:text-[11px]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="hidden sm:inline">ACTIVE CHAPTER</span>
           </div>
         </div>
 
-        {/* Visual Focal Point: Large Centered ACM Insignia */}
-        <div
-          ref={logoRef}
-          aria-hidden="true"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-none select-none flex items-center justify-center w-[250px] h-[250px] sm:w-[360px] sm:h-[360px] md:w-[460px] md:h-[460px] lg:w-[560px] lg:h-[560px] xl:w-[620px] xl:h-[620px]"
-        >
-          {/* Subtle radiant cyan/blue atmospheric aura to illuminate transparent logo against deep dark space */}
-          <div
-            className="absolute inset-0 rounded-full blur-3xl pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(0, 153, 255, 0.22) 0%, rgba(0, 90, 220, 0.12) 40%, rgba(0, 30, 90, 0.04) 65%, transparent 75%)",
-              transform: "scale(1.2)",
-            }}
-          />
-
-          {/* Logo container preserving exact proportions */}
-          <div className="relative w-full h-full flex items-center justify-center">
-            <Image
-              src="/images/jit-acm-logo.png"
-              alt="JIT ACM Insignia"
-              fill
-              priority
-              className="object-contain select-none pointer-events-none drop-shadow-[0_0_40px_rgba(0,140,255,0.30)] opacity-[0.38] sm:opacity-[0.42] md:opacity-[0.48] lg:opacity-[0.52]"
-              sizes="(max-width: 640px) 250px, (max-width: 768px) 360px, (max-width: 1024px) 460px, 620px"
-            />
-          </div>
-        </div>
-
-        {/* Main Editorial Core with Deep Negative Space and Subtle Parallax */}
+        {/* Main Editorial Core with Deep Negative Space and Balanced Rhythm */}
         <div 
           ref={editorialRef}
-          className="relative z-10 my-auto py-12 sm:py-20 max-w-5xl transition-transform duration-300 ease-out will-change-transform"
+          className="relative z-10 my-auto py-10 sm:py-16 lg:py-20 max-w-5xl transition-transform duration-300 ease-out will-change-transform"
         >
-          <div className="flex items-center gap-2 font-mono text-xs sm:text-sm uppercase tracking-[0.24em] text-white/60 mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            <Diamond size={5} filled={false} />
-            <span>LIVING COMPUTATIONAL ENVIRONMENT</span>
+          <div className="flex items-center gap-2 font-mono text-xs sm:text-sm uppercase tracking-[0.24em] text-sky-300/80 mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            <Diamond size={5} filled={true} className="text-sky-400" />
+            <span>STUDENT CHAPTER OF THE ACM</span>
           </div>
 
-          {/* <h1> JIT ACM </h1> with authoritative editorial typography */}
+          {/* <h1> JIT ACM Student Chapter </h1> */}
           <h1
             ref={titleRef}
-            aria-label="JIT ACM"
-            className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-light tracking-tight text-white leading-[0.9] mb-8 select-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
+            aria-label="JIT ACM Student Chapter"
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-[104px] font-light tracking-tight text-white leading-[1.0] mb-6 select-none drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)]"
             style={{ fontWeight: 300 }}
           >
             JIT ACM
+            <span className="block text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-sky-200/90 font-light mt-2 sm:mt-3 tracking-normal">
+              Student Chapter
+            </span>
           </h1>
 
           {/* Authoritative Primary Statement */}
-          <div ref={contentRef} className="space-y-4 max-w-4xl drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)]">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-light text-white/95 leading-[1.15] tracking-tight uppercase">
-              ADVANCING COMPUTING. BUILDING PEOPLE.
+          <div ref={contentRef} className="space-y-4 max-w-3xl drop-shadow-[0_2px_16px_rgba(0,0,0,0.9)]">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-light text-white/95 leading-[1.2] tracking-tight uppercase">
+              Advancing Computing. Building People.
             </h2>
 
-            <p className="text-sm sm:text-base font-mono uppercase tracking-[0.16em] text-white/50 max-w-xl">
-              An open computational space. Uncompromising engineering craft.
+            <p className="text-sm sm:text-base text-white/70 max-w-2xl leading-relaxed">
+              The official ACM student chapter at JIT. Fostering computational curiosity, engineering rigor, and collaborative innovation across disciplines.
             </p>
           </div>
 
-          {/* Four Architectural Pillar Badges */}
+          {/* Primary & Secondary Calls to Action (CTAs) */}
+          <div
+            ref={ctaRef}
+            className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3 sm:gap-4 relative z-10"
+          >
+            <a
+              href="#events"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById("events");
+                if (target) {
+                  target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+                  target.focus({ preventScroll: true });
+                }
+              }}
+              className="px-6 py-3 rounded-full font-mono text-xs uppercase tracking-[0.16em] font-medium bg-white text-black hover:bg-sky-200 transition-all duration-200 shadow-[0_0_24px_rgba(255,255,255,0.2)] hover:shadow-[0_0_28px_rgba(56,189,248,0.4)] inline-flex items-center gap-2 cursor-pointer focus-visible:outline-white"
+            >
+              <span>Explore Events</span>
+              <span>→</span>
+            </a>
+
+            <a
+              href="#team"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById("team");
+                if (target) {
+                  target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+                  target.focus({ preventScroll: true });
+                }
+              }}
+              className="px-6 py-3 rounded-full font-mono text-xs uppercase tracking-[0.16em] font-medium border border-white/25 bg-black/60 text-white/90 hover:text-white hover:border-white/60 hover:bg-white/[0.08] transition-all duration-200 inline-flex items-center gap-2 cursor-pointer focus-visible:outline-white"
+            >
+              <span>Meet the Team</span>
+            </a>
+
+            <a
+              href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById("projects");
+                if (target) {
+                  target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+                  target.focus({ preventScroll: true });
+                }
+              }}
+              className="px-5 py-3 rounded-full font-mono text-xs uppercase tracking-[0.16em] text-white/60 hover:text-white transition-colors inline-flex items-center gap-1.5 cursor-pointer focus-visible:outline-white"
+            >
+              <span>Our Projects ↗</span>
+            </a>
+          </div>
+
+          {/* Four Community Pillar Badges */}
           <div
             ref={pillarsRef}
-            className="mt-12 pt-6 border-t border-white/[0.10] flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.18em] text-white/50 relative z-10"
+            className="mt-10 sm:mt-12 pt-6 border-t border-white/[0.10] flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.18em] text-white/50 relative z-10"
           >
             {COMMUNITY_PILLARS.map((pillar) => (
               <div key={pillar} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400/60" />
                 <span className="hover:text-white transition-colors">{pillar}</span>
               </div>
             ))}
@@ -339,12 +362,12 @@ export function OpeningSection() {
             >
               <Diamond size={5} filled={false} />
               <span className="group-hover:translate-y-0.5 transition-transform text-white/80 group-hover:text-white">
-                EXPLORE COMMUNITY ↓
+                EXPLORE CHAPTER ↓
               </span>
             </a>
             <div className="flex items-center gap-3 text-white/40">
               <span className="w-2 h-2 rounded-full bg-white/20 animate-pulse" />
-              <span className="hidden md:inline-block">NODE KGP / ACTIVE 4 PILLARS 12 INITIATIVES</span>
+              <span className="hidden md:inline-block">JIT ACM STUDENT CHAPTER · ADVANCING COMPUTING</span>
             </div>
           </div>
         </div>

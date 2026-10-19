@@ -6,7 +6,7 @@ export const NAVIGATION_ITEMS: NavItem[] = [
   { label: "Events", href: "#events" },
   { label: "Gallery", href: "#gallery" },
   { label: "Projects", href: "#projects" },
-  { label: "People", href: "#team" },
+  { label: "Team", href: "#team" },
 ];
 
 export const SECTIONS_META: Record<string, SectionMeta> = {
@@ -14,42 +14,42 @@ export const SECTIONS_META: Record<string, SectionMeta> = {
     id: "opening",
     index: "00",
     title: "Opening",
-    tagline: "Computational Society & Design Forum",
+    tagline: "Advancing Computing. Building People.",
   },
   about: {
     id: "about",
     index: "01",
     title: "About",
-    tagline: "Perspective & Purpose",
+    tagline: "Chapter Initiatives & Focus Areas",
   },
   events: {
     id: "events",
     index: "02",
     title: "Events",
-    tagline: "Convenings & Timeline",
+    tagline: "Technical Sessions & Workshops",
   },
   gallery: {
     id: "gallery",
     index: "03",
     title: "Gallery",
-    tagline: "Visual Documentation & Archive",
+    tagline: "Chapter Chronicle & Documentation",
   },
   projects: {
     id: "projects",
     index: "04",
     title: "Projects",
-    tagline: "Initiatives & Research Artifacts",
+    tagline: "Open-Source Projects",
   },
   team: {
     id: "team",
     index: "05",
-    title: "People",
-    tagline: "People & Computational Community",
+    title: "Team",
+    tagline: "Executive Committee & Core Members",
   },
   footer: {
     id: "footer",
     index: "06",
     title: "Footer",
-    tagline: "Colophon & Affiliations",
+    tagline: "JIT ACM Student Chapter",
   },
 };

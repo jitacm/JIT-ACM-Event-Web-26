@@ -312,35 +312,35 @@ export function EventsSection() {
             <Diamond size={5} filled={true} className="text-sky-400/80" />
             <span className="text-white/80 font-medium">04 / EVENTS</span>
             <span className="text-white/30 hidden sm:inline">·</span>
-            <span className="text-white/50 hidden sm:inline">CONVENINGS & SYMPOSIA</span>
+            <span className="text-white/50 hidden sm:inline">TECHNICAL SESSIONS & WORKSHOPS</span>
           </div>
 
           <div className="flex items-center gap-4 text-white/40 font-mono text-[10px]">
-            <span className="hidden md:inline-block">CALENDAR MATRIX</span>
-            <span className="text-sky-300/70">+ [CAL.NODE // 2026–2027]</span>
+            <span className="hidden md:inline-block">TIMELINE</span>
+            <span className="text-sky-300/70">+ [SCHEDULE // 2025–2026]</span>
           </div>
         </div>
 
-        {/* Section Header: Editorial & Restrained */}
+        {/* Section Header: Direct & Professional */}
         <div className="pb-6 sm:pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="max-w-3xl">
             <div className="font-mono text-xs uppercase tracking-[0.22em] text-sky-300/75 mb-2.5 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-              <span>INTERACTIVE SCHEDULE // ACADEMIC TIMELINE</span>
+              <span>CHAPTER CALENDAR // TECHNICAL SESSIONS</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase leading-[1.15]">
-              Collective Inquiry on the Machine Frontier
+              Technical Sessions & Workshops
             </h2>
 
-            <p className="mt-2 text-xs sm:text-sm font-mono text-white/50 max-w-2xl leading-relaxed uppercase tracking-[0.14em]">
-              Select a date along the timeline to inspect schedule details, technical proceedings, and session venues.
+            <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-2xl leading-relaxed">
+              Hands-on technical masterclasses, competitive hackathons, and guest speaker sessions hosted by the JIT ACM Student Chapter.
             </p>
           </div>
 
           {/* Active Calendar Counter Badge */}
           <div className="flex items-center gap-3 self-start md:self-end font-mono text-[11px] uppercase tracking-[0.2em] border border-white/15 px-3 py-1.5 bg-black/40 backdrop-blur-sm">
-            <span className="text-sky-300">ACTIVE FORUM</span>
+            <span className="text-sky-300">EVENTS</span>
             <span className="text-white/30">|</span>
             <span className="text-white/80">
               {String(activeIndex + 1).padStart(2, "0")} / {String(totalEvents).padStart(2, "0")}
@@ -355,7 +355,7 @@ export function EventsSection() {
             <div className="flex items-center gap-2">
               <span>SCHEDULED HORIZON</span>
               <span>·</span>
-              <span className="text-sky-300/60">2026 — 2027</span>
+              <span className="text-sky-300/60">2025 — 2026</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden sm:inline-block">NAVIGATE: [← / →] OR CLICK DATE</span>
@@ -540,13 +540,14 @@ export function EventsSection() {
                   <a
                     href={currentEvent.registerUrl}
                     aria-label={`Register for ${currentEvent.title}`}
-                    className="font-mono text-xs uppercase tracking-[0.2em] px-7 py-3 border border-sky-300 bg-sky-300 text-black hover:bg-white hover:border-white transition-colors inline-flex items-center gap-2 font-medium">
-                    <span>REGISTER FORUM</span>
+                    className="font-mono text-xs uppercase tracking-[0.16em] px-6 py-2.5 border border-sky-300 bg-sky-300 text-black hover:bg-white hover:border-white transition-colors inline-flex items-center gap-2 font-medium"
+                  >
+                    <span>Register Now</span>
                     <span>→</span>
                   </a>
                 ) : (
-                  <span className="font-mono text-xs uppercase tracking-[0.18em] text-white/40 border border-white/10 px-5 py-2.5 bg-white/[0.02]">
-                    ARCHIVED SESSION · TRANSCRIPT IN REPOSITORY
+                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-white/50 border border-white/10 px-4 py-2 bg-white/[0.02]">
+                    Session Completed
                   </span>
                 )}
               </div>

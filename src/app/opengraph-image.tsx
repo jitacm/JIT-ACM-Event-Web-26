@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "JIT ACM — A Living Computing Community";
+export const alt = "JIT ACM Student Chapter";
 export const size = {
   width: 1200,
   height: 630,
@@ -46,14 +46,14 @@ export default async function Image() {
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <h1
             style={{
-              fontSize: "96px",
+              fontSize: "80px",
               fontWeight: 300,
               letterSpacing: "-0.03em",
               margin: 0,
               color: "#ffffff",
             }}
           >
-            JIT ACM
+            JIT ACM Student Chapter
           </h1>
           <p
             style={{
@@ -63,7 +63,7 @@ export default async function Image() {
               margin: 0,
             }}
           >
-            A LIVING COMPUTING COMMUNITY
+            ADVANCING COMPUTING. BUILDING PEOPLE.
           </p>
         </div>
 

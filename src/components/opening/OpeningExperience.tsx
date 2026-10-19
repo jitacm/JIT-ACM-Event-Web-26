@@ -378,7 +378,7 @@ export function OpeningExperience({ onEnter }: OpeningExperienceProps) {
       ref={containerRef}
       role="dialog"
       aria-modal="true"
-      aria-label="JIT ACM Cinematic Opening"
+      aria-label="JIT ACM Student Chapter Opening Experience"
       className="fixed inset-0 z-[100] flex flex-col justify-between bg-black text-white select-none overflow-hidden"
       style={{
         backgroundColor: "#000000",

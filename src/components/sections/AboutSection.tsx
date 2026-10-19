@@ -22,45 +22,45 @@ const PILLARS: PillarInfo[] = [
   {
     key: "people",
     num: "01",
-    title: "People",
-    tagline: "The Fellowship of Builders",
+    title: "Community",
+    tagline: "Engineers & Mentors",
     description:
-      "A collective of students, researchers, and engineers united by computational curiosity. Bridging academic rigor and raw engineering craft.",
-    stats: "6 STEWARDS · 80+ ACTIVE MEMBERS",
-    linkText: "MEET FELLOWSHIP",
+      "A collaborative student-led collective bridging computer science theory with practical craftsmanship and peer mentorship.",
+    stats: "EXECUTIVE TEAM & ACTIVE MEMBERS",
+    linkText: "Meet the Team",
     href: "#team",
   },
   {
     key: "events",
     num: "02",
     title: "Events",
-    tagline: "Convenings & Colloquia",
+    tagline: "Workshops & Hackathons",
     description:
-      "Weekly colloquia, paper reading sessions, and continuous 48-hour build sprints exploring machine frontiers and distributed networks.",
-    stats: "5 CALENDAR FORUMS · 2 SPRINT HACKATHONS",
-    linkText: "EXPLORE CALENDAR",
+      "Technical masterclasses, competitive hackathons, and industry speaker sessions designed to advance practical engineering competencies.",
+    stats: "WORKSHOPS & HACKATHONS",
+    linkText: "Explore Events",
     href: "#events",
   },
   {
     key: "projects",
     num: "03",
     title: "Projects",
-    tagline: "Research Initiatives & Systems",
+    tagline: "Open-Source Systems",
     description:
-      "Production software built for real infrastructure: open-source kernel telemetry, distributed consensus engines, and algorithmic tools.",
-    stats: "4 CORE INITIATIVES · OPEN SOURCE",
-    linkText: "INSPECT INITIATIVES",
+      "Production-grade web platforms, developer tooling, and collaborative software projects authored and maintained by chapter members.",
+    stats: "OPEN-SOURCE CODEBASES",
+    linkText: "Our Projects",
     href: "#projects",
   },
   {
     key: "learning",
     num: "04",
     title: "Learning",
-    tagline: "The Continuous Laboratory",
+    tagline: "Technical Mentorship",
     description:
-      "Peer-to-peer technical mentorship and foundational reading. Exploring memory hierarchies, complexity theory, and hardware limits.",
-    stats: "WEEKLY READING GROUP · MENTORSHIP",
-    linkText: "CHAPTER CURRICULUM",
+      "Peer code reviews, systems architecture discussions, and career guidance bridging curriculum study with industry technology standards.",
+    stats: "TECHNICAL DISCUSSIONS",
+    linkText: "View Gallery",
     href: "#gallery",
   },
 ];
@@ -463,12 +463,12 @@ export function AboutSection() {
           <div className="pb-8 border-b border-white/[0.12] mb-12">
             <div className="font-mono text-xs uppercase tracking-[0.24em] text-sky-300/70 mb-3 flex items-center gap-2">
               <Diamond size={5} filled={true} />
-              <span>03 / ABOUT // PERSPECTIVE & DISCIPLINE</span>
+              <span>03 / ABOUT // WHO WE ARE</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight uppercase leading-tight">
-              Computation as an Intellectual Discipline,
+              Advancing Computing as an Applied Discipline,
               <span className="block text-sky-200/90 font-normal">
-                and a living creative medium.
+                Engineering Craft, and Collaborative Practice.
               </span>
             </h2>
           </div>
@@ -515,7 +515,7 @@ export function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      aria-label="03 / About: Perspective and Community Structure"
+      aria-label="03 / About: Chapter Overview and Structure"
       className="relative w-full text-white bg-transparent select-none"
     >
       {/* Scroll-Driven Pinned Viewport Stage (Desktop) / Natural Flow (Mobile) */}
@@ -530,7 +530,7 @@ export function AboutSection() {
           <div className="flex items-center gap-3">
             <Diamond size={5} filled={true} className="text-sky-400/80" />
             <span className="font-mono text-[11px] sm:text-[12px] uppercase font-medium tracking-[0.22em] text-white/75">
-              03 · ABOUT // PERSPECTIVE & DISCIPLINE
+              03 · ABOUT // CHAPTER OVERVIEW
             </span>
           </div>
 
@@ -539,10 +539,10 @@ export function AboutSection() {
               ref={activeChapterPillRef}
               className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] px-2.5 py-1 border border-white/15 bg-black/50 text-sky-200/90"
             >
-              01 // THESIS
+              01 // OVERVIEW
             </span>
             <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white/40">
-              KGP.NODE · EST. 2026
+              JIT ACM · EST. 2026
             </span>
           </div>
         </header>
@@ -552,7 +552,7 @@ export function AboutSection() {
           isMobile ? "flex flex-col items-start justify-start py-20 gap-16" : "flex-1 flex items-center justify-center my-auto"
         }`}>
           {/* ─────────────────────────────────────────────────────────────
-              MOMENT 1: THE INTELLECTUAL THESIS
+              MOMENT 1: CHAPTER MISSION
           ───────────────────────────────────────────────────────────── */}
           <div
             ref={act1Ref}
@@ -564,39 +564,39 @@ export function AboutSection() {
               className="font-mono text-xs uppercase tracking-[0.24em] text-sky-300/70 mb-6 flex items-center gap-2"
             >
               <Diamond size={4} filled={true} className="text-sky-400" />
-              <span>CHAPTER THESIS // THE CRAFT</span>
+              <span>CHAPTER MISSION // COMPUTATIONAL PRACTICE</span>
             </div>
 
             <div
               ref={act1Line1Ref}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white/50 tracking-tight uppercase leading-[1.05]"
             >
-              Computation as an
+              Advancing computing as an
             </div>
 
             <div
               ref={act1Line2Ref}
               className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-white tracking-tighter uppercase leading-[1.02] my-2 sm:my-3"
             >
-              Intellectual Discipline,
+              Applied Science,
             </div>
 
             <div
               ref={act1Line3Ref}
               className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-sky-200/80 italic tracking-tight leading-[1.1]"
             >
-              & a living creative medium.
+              & collaborative engineering craft.
             </div>
 
             <div ref={act1SubRef} className="mt-8 pt-4 border-t border-white/[0.12] max-w-xl">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-white/45">
-                NOT PASSIVE CODE. UNCOMPROMISING INTELLECTUAL CRAFT.
+                BRIDGING THEORETICAL RIGOR WITH PRACTICAL SOFTWARE SYSTEMS.
               </p>
             </div>
           </div>
 
           {/* ─────────────────────────────────────────────────────────────
-              MOMENT 2: THE PARADIGM SHIFT
+              MOMENT 2: HANDS-ON LEARNING
           ───────────────────────────────────────────────────────────── */}
           <div
             ref={act2Ref}
@@ -608,19 +608,19 @@ export function AboutSection() {
               className="font-mono text-xs uppercase tracking-[0.24em] text-sky-300/70 mb-6 flex items-center gap-2"
             >
               <Diamond size={4} filled={true} className="text-sky-400" />
-              <span>CORE ETHOS // THE PARADIGM SHIFT</span>
+              <span>CORE ETHOS // APPLIED ENGINEERING</span>
             </div>
 
             <div
               ref={act2Line1Ref}
               className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white/45 tracking-tight uppercase mb-2 sm:mb-4"
             >
-              From passive consumers of software
+              Transitioning from classroom theory
             </div>
 
             <div className="flex items-center gap-4 my-1 sm:my-2">
               <span className="font-mono text-xs sm:text-sm text-sky-400/50 tracking-[0.3em] uppercase">
-                [ EVOLUTION ]
+                [ SYSTEM ARCHITECTURE ]
               </span>
               <span className="text-sky-300/70 font-light text-lg">→</span>
             </div>
@@ -629,30 +629,30 @@ export function AboutSection() {
               ref={act2Line2Ref}
               className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-white tracking-tighter uppercase leading-none"
             >
-              Active Architects
+              Production Systems
             </div>
 
             <div
               ref={act2Line3Ref}
               className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-sky-200/85 tracking-tight mt-3 sm:mt-4"
             >
-              of the computational universe.
+              and open-source innovation.
             </div>
 
             <div
               ref={act2SubRef}
               className="mt-10 flex flex-wrap justify-center items-center gap-3 sm:gap-6 font-mono text-[11px] sm:text-xs uppercase tracking-[0.22em] text-white/45"
             >
-              <span>SYSTEMS RIGOR</span>
+              <span>TECHNICAL WORKSHOPS</span>
               <span>·</span>
-              <span>ALGORITHMIC CRAFT</span>
+              <span>HACKATHONS</span>
               <span>·</span>
-              <span>OPEN INQUIRY</span>
+              <span>COLLABORATIVE CODEBASES</span>
             </div>
           </div>
 
           {/* ─────────────────────────────────────────────────────────────
-              MOMENT 3: THE CRAFT & SCALE
+              MOMENT 3: COLLABORATION
           ───────────────────────────────────────────────────────────── */}
           <div
             ref={act3Ref}
@@ -664,28 +664,28 @@ export function AboutSection() {
               className="font-mono text-xs uppercase tracking-[0.24em] text-sky-300/70 mb-6 flex items-center gap-2"
             >
               <Diamond size={4} filled={true} className="text-sky-400" />
-              <span>OPERATIONAL POSTURE // ARCHITECTURE</span>
+              <span>COMMUNITY CULTURE // MENTORSHIP</span>
             </div>
 
             <div
               ref={act3Line1Ref}
               className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white/50 tracking-tight uppercase mb-2 leading-none"
             >
-              Uncompromising
+              Cultivating technical leadership,
             </div>
 
             <div
               ref={act3Line2Ref}
               className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-white tracking-tighter uppercase leading-none"
             >
-              Engineering Craft.
+              Peer Mentorship,
             </div>
 
             <div
               ref={act3Line3Ref}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-sky-200/85 tracking-tight uppercase mt-3 leading-none"
             >
-              Grounded in Rigor. Built to Scale.
+              and engineering excellence.
             </div>
 
             <div
@@ -693,15 +693,14 @@ export function AboutSection() {
               className="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-[11px] sm:text-xs uppercase tracking-[0.2em] text-white/45"
             >
               <span className="px-3 py-1.5 border border-white/10 bg-white/[0.03]">
-                BARE METAL TO DISTRIBUTED SYSTEMS
+                OPEN TO ALL STUDENTS AT JIT
               </span>
               <span className="text-sky-400/60">EST. 2026</span>
             </div>
           </div>
 
           {/* ─────────────────────────────────────────────────────────────
-              MOMENT 4: COMPACT FACTUAL ABOUT INFORMATION
-              Readable, compact, factual block showcasing Four Pillars
+              MOMENT 4: WHAT WE DO
           ───────────────────────────────────────────────────────────── */}
           <div
             ref={act4Ref}
@@ -714,15 +713,15 @@ export function AboutSection() {
                 <div>
                   <div className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.22em] text-sky-300/70 mb-1 flex items-center gap-2">
                     <Diamond size={4} filled={true} />
-                    <span>03 / FACTUAL ARCHITECTURE // THE FOUR PILLARS</span>
+                    <span>03 / INITIATIVES // FOUR CORE PILLARS</span>
                   </div>
                   <h3 className="text-xl sm:text-2xl font-light text-white uppercase tracking-tight">
-                    Chapter Structure & Initiatives
+                    Chapter Initiatives & Focus Areas
                   </h3>
                 </div>
                 <div className="hidden sm:block font-mono text-[10px] text-white/40 uppercase tracking-widest text-right">
-                  <span>ACM STUDENT CHAPTER</span>
-                  <span className="block text-sky-400/50">4 ACTIVE INITIATIVES</span>
+                  <span>JIT ACM STUDENT CHAPTER</span>
+                  <span className="block text-sky-400/50">4 CORE INITIATIVES</span>
                 </div>
               </div>
 
@@ -785,13 +784,13 @@ export function AboutSection() {
         <footer className="relative z-20 flex flex-col gap-3 max-w-[1440px] w-full mx-auto border-t border-white/[0.10] pt-4">
           <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white/40">
             <div className="flex items-center gap-4">
-              <span>SCROLL TO TRAVERSE PERSPECTIVE</span>
+              <span>SCROLL TO EXPLORE CHAPTER</span>
               <span className="hidden sm:inline-block">·</span>
               <span className="hidden sm:inline-block">FOUR MOMENTS</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span>MOMENT DENSITY</span>
+              <span>EXPLORE</span>
               <span ref={progressPercentRef} className="text-sky-300 font-mono">
                 00%
               </span>

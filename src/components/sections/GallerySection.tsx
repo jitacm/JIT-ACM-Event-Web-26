@@ -411,25 +411,28 @@ export function GallerySection() {
             <Diamond size={5} filled={true} className="text-sky-400/80" />
             <span className="text-white/80 font-medium">05 / GALLERY</span>
             <span className="text-white/30 hidden sm:inline">·</span>
-            <span className="text-white/50 hidden sm:inline">VISUAL CHRONICLE</span>
+            <span className="text-white/50 hidden sm:inline">CHAPTER DOCUMENTATION</span>
           </div>
 
           <div className="flex items-center gap-4 text-white/40 font-mono text-[10px]">
-            <span className="hidden md:inline-block">LIVING PHOTOGRAPHIC ARCHIVE</span>
-            <span className="text-sky-300/70">+ [STREAM.NODE // 2026]</span>
+            <span className="hidden md:inline-block">COMMUNITY MOMENTS</span>
+            <span className="text-sky-300/70">+ [PHOTO ARCHIVE]</span>
           </div>
         </div>
 
-        {/* Section Header: Compact, Editorial, Restrained */}
+        {/* Section Header: Direct & Professional */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
           <div>
             <div className="font-mono text-xs uppercase tracking-[0.22em] text-sky-300/75 mb-2 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-sky-400/80 animate-pulse" />
-              <span>PHOTOGRAPHIC ARCHIVE // REAL DOCUMENTATION</span>
+              <span>CHAPTER CHRONICLE // VISUAL ARCHIVE</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase">
-              The Physicality of Computing
+              Chapter Chronicle
             </h2>
+            <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-xl leading-relaxed">
+              Visual documentation capturing hackathons, technical speaker sessions, and community milestones across the JIT ACM Student Chapter.
+            </p>
           </div>
 
           {/* Stream Controls & Drag Indicator */}

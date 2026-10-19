@@ -28,7 +28,7 @@ export const GALLERY_ITEMS: GalleryPhoto[] = [
     width: 993,
     height: 745, // 4:3
     alt: "SHIKHAR Group Photo",
-    caption: "SHIKHAR team group photograph at an ACM JIT chapter event.",
+    caption: "SHIKHAR team group photo at a JIT ACM Student Chapter event.",
     year: "2026",
     placeholder: false,
   },
@@ -37,7 +37,7 @@ export const GALLERY_ITEMS: GalleryPhoto[] = [
     width: 993,
     height: 745, // 4:3
     alt: "GitHub Master Class Speaker Session",
-    caption: "Speaker presenting at the GitHub Master Class technical workshop. GPS overlay visible in original.",
+    caption: "Speaker presenting at the GitHub MasterClass technical workshop.",
     year: "2026",
     placeholder: false,
   },
