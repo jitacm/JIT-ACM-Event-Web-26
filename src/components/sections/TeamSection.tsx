@@ -80,57 +80,59 @@ function MemberCard({
   const linkedinUrl = findLink(member.links, "linkedin");
 
   const linkHitAreaStyle = {
-    width: "36px",
-    height: "36px",
+    width: "40px",
+    height: "40px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   } as React.CSSProperties;
 
   const showPhoto = Boolean(member.photo && !member.placeholder && !imageError);
+  const photoUrl = member.photo ? `${member.photo}?v=20261019-4x5` : undefined;
 
   return (
-    <div className="flex flex-col w-full shrink-0 select-none group rounded-xl p-2.5 sm:p-3 bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.10] hover:border-white/[0.22] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] transition-all duration-300">
-      {/* Compact Portrait Frame with softly rounded edges and solid dark backdrop */}
-      <div className="relative w-full aspect-square overflow-hidden rounded-[10px] bg-[#0d0f14] border border-white/[0.08] group-hover:border-white/18 transition-colors duration-300 mb-2 sm:mb-2.5 flex items-center justify-center">
-        {showPhoto ? (
+    <div className="flex flex-col w-full shrink-0 select-none group rounded-xl p-3 sm:p-3.5 lg:p-4 bg-white/[0.025] hover:bg-white/[0.045] border border-white/[0.10] hover:border-white/[0.22] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] transition-all duration-300">
+      {/* 4:5 Portrait Frame with softly rounded edges and solid dark backdrop */}
+      <div className="relative w-full aspect-[4/5] overflow-hidden rounded-[10px] bg-[#0d0f14] border border-white/[0.08] group-hover:border-white/18 transition-colors duration-300 mb-2.5 sm:mb-3 flex items-center justify-center">
+        {showPhoto && photoUrl ? (
           <Image
-            src={member.photo!}
+            src={photoUrl}
             alt={member.name}
             fill
             unoptimized
+            loading="eager"
             draggable={false}
-            className="object-cover rounded-[10px] select-none pointer-events-none"
-            sizes="(max-width: 640px) 145px, (max-width: 768px) 160px, 175px"
+            className="object-cover object-top rounded-[10px] select-none pointer-events-none"
+            sizes="(max-width: 640px) 85vw, (max-width: 1024px) 300px, 280px"
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/[0.12] bg-white/[0.04] flex items-center justify-center font-mono text-xs sm:text-sm font-light tracking-[0.14em] text-white/90">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-white/[0.12] bg-white/[0.04] flex items-center justify-center font-mono text-sm sm:text-base font-light tracking-[0.14em] text-white/90">
             {initials}
           </div>
         )}
       </div>
 
       {/* Name */}
-      <h3 className="text-xs sm:text-sm font-medium tracking-tight text-white leading-snug truncate">
+      <h3 className="text-sm sm:text-base font-medium tracking-tight text-white leading-snug truncate">
         {member.name}
       </h3>
 
       {/* Designation / Role */}
-      <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.10em] text-white/55 mt-0.5 leading-tight truncate">
+      <p className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.10em] text-sky-300/80 mt-0.5 leading-tight truncate">
         {member.role}
       </p>
 
       {/* Social Links */}
       {(linkedinUrl || githubUrl) && (
-        <div className="flex items-center gap-1.5 sm:gap-2 mt-2 text-white/40 relative z-20">
+        <div className="flex items-center gap-1 mt-2 sm:mt-2.5 text-white/45 relative z-20">
           {linkedinUrl && (
             <a
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${member.name} on LinkedIn`}
-              className="cursor-pointer relative z-20 hover:text-white transition-colors focus-visible:outline-sky-400"
+              className="cursor-pointer relative z-20 hover:text-sky-300 transition-colors focus-visible:outline-sky-400 rounded"
               style={linkHitAreaStyle}
               onMouseEnter={onLinkHover}
               onFocus={onLinkHover}
@@ -150,7 +152,7 @@ function MemberCard({
                 }
               }}
             >
-              <LinkedInIcon className="w-4.5 h-4.5 sm:w-5 sm:h-5 pointer-events-none" />
+              <LinkedInIcon className="w-4 h-4 sm:w-4.5 sm:h-4.5 pointer-events-none" />
             </a>
           )}
           {githubUrl && (
@@ -159,7 +161,7 @@ function MemberCard({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${member.name} on GitHub`}
-              className="cursor-pointer relative z-20 hover:text-white transition-colors focus-visible:outline-sky-400"
+              className="cursor-pointer relative z-20 hover:text-white transition-colors focus-visible:outline-sky-400 rounded"
               style={linkHitAreaStyle}
               onMouseEnter={onLinkHover}
               onFocus={onLinkHover}
@@ -214,9 +216,9 @@ export function TeamSection() {
     totalWidth: number;
     baseOffsets: number[];
   }>({
-    cardWidth: 170,
-    pitch: 190,
-    totalWidth: 13 * 190,
+    cardWidth: 280,
+    pitch: 300,
+    totalWidth: 13 * 300,
     baseOffsets: [],
   });
 
@@ -243,9 +245,9 @@ export function TeamSection() {
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
     if (cards.length < 2) return;
 
-    const cardWidth = cards[0].offsetWidth || 145;
+    const cardWidth = cards[0].offsetWidth || 280;
     const baseOffsets = cards.map((c) => c.offsetLeft);
-    const pitch = (baseOffsets[1] - baseOffsets[0]) || (cardWidth + 14);
+    const pitch = (baseOffsets[1] - baseOffsets[0]) || (cardWidth + 16);
     const totalWidth = cards.length * pitch;
 
     metrics.current = {
@@ -519,16 +521,26 @@ export function TeamSection() {
     }
   };
 
+  const scrollPrev = useCallback(() => {
+    pauseAutoScrollTemporarily(2500);
+    const step = metrics.current.pitch || 300;
+    scrollPos.current -= step;
+    renderCarousel();
+  }, [pauseAutoScrollTemporarily, renderCarousel]);
+
+  const scrollNext = useCallback(() => {
+    pauseAutoScrollTemporarily(2500);
+    const step = metrics.current.pitch || 300;
+    scrollPos.current += step;
+    renderCarousel();
+  }, [pauseAutoScrollTemporarily, renderCarousel]);
+
   // Keyboard navigation for accessible horizontal scrolling
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "ArrowLeft") {
-      pauseAutoScrollTemporarily(2000);
-      scrollPos.current -= 180;
-      renderCarousel();
+      scrollPrev();
     } else if (e.key === "ArrowRight") {
-      pauseAutoScrollTemporarily(2000);
-      scrollPos.current += 180;
-      renderCarousel();
+      scrollNext();
     }
   };
 
@@ -557,19 +569,43 @@ export function TeamSection() {
       className="relative w-full text-white bg-transparent py-10 sm:py-16 lg:py-20 select-none overflow-hidden"
     >
       <span id="people" className="sr-only" aria-hidden="true" />
-      <div className="w-full max-w-[1240px] mx-auto px-6 sm:px-10 lg:px-12 flex flex-col mb-6 sm:mb-8">
-        {/* Team Section Header with Dynamic Current Year */}
-        <div className="border-b border-white/[0.08] pb-4">
-          <div className="font-mono text-xs uppercase tracking-[0.22em] text-sky-400/80 mb-2 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-            <span>EXECUTIVE COMMITTEE & CORE MEMBERS</span>
+      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-10 lg:px-12 flex flex-col mb-6 sm:mb-8">
+        {/* Team Section Header with Dynamic Current Year & Navigation Controls */}
+        <div className="border-b border-white/[0.08] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.22em] text-sky-400/80 mb-2 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+              <span>EXECUTIVE COMMITTEE & CORE MEMBERS</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase">
+              Team {currentYear}
+            </h2>
+            <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-xl leading-relaxed">
+              The executive committee, technical leads, and core coordinators guiding the JIT ACM Student Chapter.
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight uppercase">
-            Team {currentYear}
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-white/60 max-w-xl leading-relaxed">
-            The executive committee, technical leads, and core coordinators guiding the JIT ACM Student Chapter.
-          </p>
+
+          {/* Carousel Step Controls */}
+          <div className="flex items-center gap-2.5 self-start sm:self-auto font-mono text-xs">
+            <button
+              type="button"
+              onClick={scrollPrev}
+              aria-label="Previous team member"
+              className="px-3 py-1.5 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 bg-white/[0.02] focus-visible:outline-sky-400"
+            >
+              <span>←</span>
+              <span className="text-[10px] tracking-wider uppercase">PREV</span>
+            </button>
+            <button
+              type="button"
+              onClick={scrollNext}
+              aria-label="Next team member"
+              className="px-3 py-1.5 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5 bg-white/[0.02] focus-visible:outline-sky-400"
+            >
+              <span className="text-[10px] tracking-wider uppercase">NEXT</span>
+              <span>→</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -603,11 +639,11 @@ export function TeamSection() {
           onWheel={handleWheel}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
-          className="w-full min-w-0 max-w-full overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing px-6 sm:px-10 lg:px-12 focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-400/50"
+          className="w-full min-w-0 max-w-full overflow-hidden touch-pan-y cursor-grab active:cursor-grabbing px-4 sm:px-10 lg:px-12 focus:outline-none focus-visible:ring-1 focus-visible:ring-sky-400/50"
         >
           <div
             ref={trackRef}
-            className="flex items-start gap-3 sm:gap-4 md:gap-5 w-max shrink-0 py-1 will-change-transform"
+            className="flex items-start gap-3.5 sm:gap-4 md:gap-5 w-max shrink-0 py-1 will-change-transform"
           >
             {ALL_PEOPLE.map((member, idx) => (
               <div
@@ -615,7 +651,7 @@ export function TeamSection() {
                 ref={(el) => {
                   cardRefs.current[idx] = el;
                 }}
-                className="w-[145px] sm:w-[160px] md:w-[175px] shrink-0 will-change-transform"
+                className="w-[84vw] max-w-[320px] sm:w-[260px] md:w-[290px] lg:w-[260px] xl:w-[280px] shrink-0 will-change-transform"
               >
                 <MemberCard
                   member={member}

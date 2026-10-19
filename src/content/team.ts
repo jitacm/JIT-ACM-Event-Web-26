@@ -100,8 +100,8 @@ export const TEAM_MEMBERS: MemberItem[] = [
   {
     id: "tm-09",
     name: "Bharti Thakre",
-    role: "Editor",
-    bio: "Editor for the JIT ACM Student Chapter and third-year Computer Science and Engineering student at JIT. Experienced in event management and communications, with a focus on technical documentation, editorial content, and emerging computing trends.",
+    role: "Event Manager",
+    bio: "Event Manager for the JIT ACM Student Chapter and third-year Computer Science and Engineering student at JIT. Experienced in event management and communications, with a focus on technical sessions, chapter events, and emerging computing trends.",
     photo: "/team/bharti-thakre.jpg",
     placeholder: false,
     links: [
@@ -112,8 +112,8 @@ export const TEAM_MEMBERS: MemberItem[] = [
   {
     id: "tm-10",
     name: "Riya Sharma",
-    role: "Associate Design Lead",
-    bio: "Associate Design Lead and Computer Science Engineering student with a passion for user interface design, technology innovation, and team collaboration. Contributes to chapter creative design, event branding, and technical engagement initiatives.",
+    role: "Deputy Event Manager",
+    bio: "Deputy Event Manager and Computer Science Engineering student with a passion for event coordination, user interface design, technology innovation, and team collaboration. Contributes to chapter creative design, event branding, and technical engagement initiatives.",
     photo: "/team/riya-sharma.jpg",
     placeholder: false,
     links: [

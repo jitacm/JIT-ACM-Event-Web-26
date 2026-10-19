@@ -42,7 +42,16 @@ function parseEventDate(dateLabel: string, dateISO: string | null): ParsedDate {
   const subParts = datePart.split(" ");
   const month = subParts[0] || "DATE";
   const day = (subParts[1] || "--").replace(",", "");
-  const year = subParts[2] || "2026";
+  let year = subParts[subParts.length - 1]?.replace(",", "") || "2026";
+
+  if (dateISO) {
+    try {
+      const d = new Date(dateISO);
+      year = d.getUTCFullYear().toString();
+    } catch {
+      // Keep fallback
+    }
+  }
 
   let dayOfWeek = "SESSION";
   if (dateISO) {
@@ -349,9 +358,9 @@ export function EventsSection() {
         </div>
 
         {/* MAIN VISUAL ANCHOR: HORIZONTAL DATE / CALENDAR SYSTEM */}
-        <div className="relative w-full border-t border-b border-white/[0.12] py-3.5 sm:py-5 mb-6 sm:mb-8">
+        <div className="relative w-full border-t border-b border-white/[0.12] py-3 sm:py-4 mb-5 sm:mb-6">
           {/* Calendar Rail Subheader */}
-          <div className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-white/35 pb-2.5 px-1 border-b border-white/[0.06] mb-3 sm:mb-4">
+          <div className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-white/35 pb-2 px-1 border-b border-white/[0.06] mb-3">
             <div className="flex items-center gap-2">
               <span>SCHEDULED HORIZON</span>
               <span>·</span>
@@ -359,16 +368,16 @@ export function EventsSection() {
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden sm:inline-block">NAVIGATE: [← / →] OR CLICK DATE</span>
-              <span className="text-white/20 sm:hidden">SWIPE DATES →</span>
+              <span className="text-white/20 sm:hidden">TAP DATE TO VIEW</span>
             </div>
           </div>
 
-          {/* Spatial Date Track */}
+          {/* Responsive CSS Grid Date Track */}
           <div
             ref={scrollTrackRef}
             role="tablist"
             aria-label="Calendar Timeline Date Track"
-            className="flex sm:grid sm:grid-cols-5 gap-2.5 sm:gap-3.5 overflow-x-auto snap-x scrollbar-none pb-2 sm:pb-0 px-2 sm:px-0"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5 lg:gap-3"
           >
             {EVENTS_DATA.map((evt, idx) => {
               const isSelected = idx === activeIndex;
@@ -385,14 +394,14 @@ export function EventsSection() {
                   aria-selected={isSelected}
                   aria-controls={`panel-${evt.slug}`}
                   onClick={() => selectDate(idx)}
-                  className={`group relative text-left p-3.5 sm:p-5 border transition-all duration-200 cursor-pointer snap-start flex-shrink-0 min-w-[155px] sm:min-w-0 focus-visible:outline-sky-400 backdrop-blur-md ${
+                  className={`group relative text-left p-2.5 sm:p-3 lg:p-3 xl:p-3.5 border transition-all duration-200 cursor-pointer w-full min-w-0 focus-visible:outline-sky-400 backdrop-blur-md flex flex-col justify-between ${
                     isSelected
                       ? "border-sky-400/80 bg-sky-950/30 text-white shadow-[0_0_24px_rgba(56,189,248,0.12)]"
                       : "border-white/[0.10] bg-neutral-950/60 text-white/45 hover:border-white/25 hover:text-white/80 hover:bg-neutral-900/50"
                   }`}
                 >
                   {/* Top: Month & Year bracket */}
-                  <div className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2">
+                  <div className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-1.5">
                     <span className={isSelected ? "text-sky-300 font-medium" : "text-white/40"}>
                       {date.month} &apos;{date.year.slice(2)}
                     </span>
@@ -408,10 +417,14 @@ export function EventsSection() {
                       }`} />
                   </div>
 
-                  {/* Center: Large Spatial Date Numeral */}
-                  <div className="my-1 sm:my-2">
+                  {/* Center: Spatial Date Numeral (adaptive font sizing prevents overflow on ranges) */}
+                  <div className="my-1 sm:my-1.5">
                     <div
-                      className={`text-2xl sm:text-4xl lg:text-5xl font-light tracking-tighter leading-none transition-colors duration-200 ${
+                      className={`font-light tracking-tight leading-none transition-colors duration-200 truncate ${
+                        date.day.length > 3
+                          ? "text-xl sm:text-2xl lg:text-xl xl:text-2xl"
+                          : "text-2xl sm:text-3xl lg:text-3xl xl:text-4xl"
+                      } ${
                         isSelected ? "text-white font-normal" : "text-white/60 group-hover:text-white/90"
                       }`}>
                       {date.day}
@@ -419,12 +432,12 @@ export function EventsSection() {
                   </div>
 
                   {/* Bottom: Day of Week & Timing */}
-                  <div className="mt-2 pt-2 border-t border-white/[0.08] flex items-center justify-between font-mono text-[8px] sm:text-[9px] uppercase tracking-wider">
-                    <span className={isSelected ? "text-sky-200/90" : "text-white/40"}>
+                  <div className="mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-white/[0.08] flex items-center justify-between font-mono text-[8px] sm:text-[9px] uppercase tracking-wider">
+                    <span className={isSelected ? "text-sky-200/90 font-medium" : "text-white/40"}>
                       {date.dayOfWeek}
                     </span>
-                    <span className="text-white/30 truncate ml-1">
-                      {date.time.split(" ")[0]}
+                    <span className="text-white/30 truncate ml-1 text-right">
+                      {date.time ? date.time.split(" ")[0] : "SESSION"}
                     </span>
                   </div>
 
@@ -454,10 +467,10 @@ export function EventsSection() {
             id={`panel-${currentEvent.slug}`}
             role="tabpanel"
             aria-labelledby={`tab-${currentEvent.slug}`}
-            className={`relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col justify-between ${isMobile ? "min-h-[240px]" : "min-h-[320px]"}`}
+            className="relative z-10 p-4 sm:p-6 lg:p-7 flex flex-col justify-between min-h-[220px] sm:min-h-[260px]"
           >
             {/* Top Dossier Technical Metadata Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.10] pb-4 sm:pb-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.10] pb-3 sm:pb-3.5">
               <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em]">
                 <span className="text-white/40">
                   SYS.EVT.{String(activeIndex + 1).padStart(2, "0")}
@@ -485,37 +498,37 @@ export function EventsSection() {
               </div>
             </div>
 
-            {/* Center: Massive Dominating Event Title & Supporting Meta */}
-            <div className="my-6 sm:my-7 max-w-5xl space-y-3 sm:space-y-4">
+            {/* Center: Dominating Event Title & Supporting Meta */}
+            <div className="my-4 sm:my-5 max-w-5xl space-y-2 sm:space-y-3">
               <div className="font-mono text-xs text-sky-400/80 uppercase tracking-[0.2em] flex items-center gap-2">
                 <Diamond size={4} filled={true} className="text-sky-400" />
                 <span>{currentEvent.mode}</span>
               </div>
 
-              <h3 className="text-2xl sm:text-4xl lg:text-5xl font-light text-white tracking-tight leading-[1.1] uppercase">
+              <h3 className="text-xl sm:text-3xl lg:text-4xl font-light text-white tracking-tight leading-[1.15] uppercase">
                 {currentEvent.title}
               </h3>
 
-              <div className="pt-2 flex flex-wrap items-center gap-3 font-mono text-xs text-white/50 uppercase tracking-[0.16em]">
+              <div className="pt-1 flex flex-wrap items-center gap-3 font-mono text-xs text-white/50 uppercase tracking-[0.16em]">
                 {showLocation() && <span className="text-white/80">{currentEvent.location}</span>}
                 {showLocation() && <span>·</span>}
                 <span>{activeParsed.dayOfWeek} SESSIONS</span>
               </div>
 
               {/* Concise Summary — Derived Strictly from Existing Data */}
-              <p className="text-white/70 text-sm sm:text-base font-light leading-relaxed max-w-3xl pt-2">
+              <p className="text-white/70 text-xs sm:text-sm font-light leading-relaxed max-w-3xl pt-1">
                 {getSummary()}
               </p>
             </div>
 
             {/* Bottom: Action Rail & Step Controls */}
-            <div className="pt-6 border-t border-white/[0.10] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-              <div className="flex items-center gap-3 font-mono text-xs">
+            <div className="pt-4 sm:pt-5 border-t border-white/[0.10] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-2.5 font-mono text-xs">
                 <button
                   type="button"
                   onClick={() => selectDate((activeIndex - 1 + totalEvents) % totalEvents)}
                   aria-label="Previous calendar event"
-                  className="px-3 py-2 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                  className="px-3 py-1.5 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-2">
                   <span>←</span>
                   <span className="text-[10px] tracking-wider uppercase">PREV</span>
                 </button>
@@ -524,7 +537,7 @@ export function EventsSection() {
                   type="button"
                   onClick={() => selectDate((activeIndex + 1) % totalEvents)}
                   aria-label="Next calendar event"
-                  className="px-3 py-2 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-2">
+                  className="px-3 py-1.5 border border-white/20 hover:border-white text-white/70 hover:text-white transition-colors cursor-pointer flex items-center gap-2">
                   <span className="text-[10px] tracking-wider uppercase">NEXT</span>
                   <span>→</span>
                 </button>
@@ -540,13 +553,13 @@ export function EventsSection() {
                   <a
                     href={currentEvent.registerUrl}
                     aria-label={`Register for ${currentEvent.title}`}
-                    className="font-mono text-xs uppercase tracking-[0.16em] px-6 py-2.5 border border-sky-300 bg-sky-300 text-black hover:bg-white hover:border-white transition-colors inline-flex items-center gap-2 font-medium"
+                    className="font-mono text-xs uppercase tracking-[0.16em] px-5 py-2 border border-sky-300 bg-sky-300 text-black hover:bg-white hover:border-white transition-colors inline-flex items-center gap-2 font-medium"
                   >
                     <span>Register Now</span>
                     <span>→</span>
                   </a>
                 ) : (
-                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-white/50 border border-white/10 px-4 py-2 bg-white/[0.02]">
+                  <span className="font-mono text-xs uppercase tracking-[0.16em] text-white/50 border border-white/10 px-3.5 py-1.5 bg-white/[0.02]">
                     Session Completed
                   </span>
                 )}

@@ -27,13 +27,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Ensure team photos are served with long-term caching on Vercel
+  // Ensure team photos are served with proper cache headers (avoiding stale dev cache)
   async headers() {
     return [
       {
         source: "/team/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000" },
+          {
+            key: "Cache-Control",
+            value:
+              process.env.NODE_ENV === "development"
+                ? "no-cache, no-store, must-revalidate"
+                : "public, max-age=86400, stale-while-revalidate=604800",
+          },
         ],
       },
     ];
