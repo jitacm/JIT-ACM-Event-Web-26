@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { FOOTER_FOCUS_NAV, FOOTER_DATA } from "@/content/site";
+import { TEAM_MEMBERS } from "@/content/team";
 import { usePrefersReducedMotion } from "@/lib/motion/tokens";
 import { registerScrollTrigger, gsap } from "@/lib/motion/gsap";
 
@@ -30,11 +31,12 @@ interface DustParticle {
 function LuminousSignature({
   name,
   reducedMotion,
+  href,
 }: {
   name: string;
   reducedMotion: boolean;
+  href?: string;
 }) {
-  const containerRef = useRef<HTMLSpanElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -188,13 +190,8 @@ function LuminousSignature({
     };
   }, [reducedMotion]);
 
-  return (
-    <span
-      ref={containerRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="relative inline-flex items-center justify-center px-1.5 py-0.5 -mx-1.5 group cursor-default"
-    >
+  const visualContent = (
+    <>
       {/* 1. Soft glowing mist aura directly behind the name */}
       <span
         aria-hidden="true"
@@ -227,6 +224,34 @@ function LuminousSignature({
       >
         {name}
       </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsHovered(true)}
+        onBlur={() => setIsHovered(false)}
+        aria-label={`${name} personal LinkedIn profile (opens in new tab)`}
+        className="relative inline-flex items-center justify-center px-1.5 py-0.5 -mx-1.5 group cursor-pointer no-underline rounded-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black transition-colors"
+      >
+        {visualContent}
+      </a>
+    );
+  }
+
+  return (
+    <span
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative inline-flex items-center justify-center px-1.5 py-0.5 -mx-1.5 group cursor-default"
+    >
+      {visualContent}
     </span>
   );
 }
@@ -486,7 +511,16 @@ export function FooterSection() {
         {/* 5. REFINED WEBMASTER CREDIT: Luminous Signature with Glowing Dust Effect */}
         <div className="pt-6 sm:pt-8 border-t border-white/[0.06] mt-6 sm:mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-white/40">
           <div className="flex items-center gap-2">
-            <LuminousSignature name="Pranjali Santani" reducedMotion={reducedMotion} />
+            <LuminousSignature
+              name="Pranjali Santani"
+              reducedMotion={reducedMotion}
+              href={
+                TEAM_MEMBERS.find((m) =>
+                  m.name.toLowerCase().includes("pranjali")
+                )?.links?.find((l) => l.label === "LINKEDIN")?.url ||
+                "https://www.linkedin.com/in/pranjali-santani-cse"
+              }
+            />
             <span className="text-white/25 select-none" aria-hidden="true">·</span>
             <span className="text-white/50">Webmaster</span>
           </div>
