@@ -82,7 +82,7 @@ export const SITE_SOCIAL_LINKS = {
   instagram: "https://www.instagram.com/acm_jit/",
   linkedin: "https://www.linkedin.com/in/jit-acm-student-chapter/?isSelfProfile=false",
   githubProfile: "https://github.com/jitacm",
-  repository: "https://github.com/jitacm/JIT-ACM-Offcial-Website",
+  repository: "https://github.com/jitacm/JIT-ACM-Event-Web-26",
 } as const;
 
 export const FOOTER_DATA = {

@@ -1,9 +1,9 @@
-# JIT ACM — Official Student Chapter Website
+# JIT ACM | Official Student Chapter Website
 
-The official web presence of the **JIT ACM Student Chapter** (Association for Computing Machinery at Jhulelal Institute of Technology). Engineered with modern web standards, the platform showcases chapter initiatives, student leadership, technical projects, marquee events, and community gallery archives through high-performance interactive experiences.
+The official website of the **JIT ACM Student Chapter** at Jhulelal Institute of Technology. Designed and engineered to represent the chapter's initiatives, student leadership, technical projects, marquee events, and community activities through modern, high-performance web experiences.
 
 - **Production URL:** [https://jit-acm.vercel.app](https://jit-acm.vercel.app)
-- **GitHub Repository:** [https://github.com/pranjalisantani/JIT_ACM](https://github.com/pranjalisantani/JIT_ACM)
+- **GitHub Repository:** [https://github.com/jitacm/JIT-ACM-Event-Web-26](https://github.com/jitacm/JIT-ACM-Event-Web-26)
 
 ---
 
@@ -17,7 +17,6 @@ The official web presence of the **JIT ACM Student Chapter** (Association for Co
 - **Interactive Chapter Gallery:** Touch-friendly, draggable, and auto-drifting event photograph wall with pause and inspect controls.
 - **Institutional Affiliations:** Verified ACM and Special Interest Group (SIG) badges including SIGARCH, SIGOPS, SIGPLAN, and the ACM Digital Library.
 - **Audio Welcome Experience:** Ambient audio greeting (`acm-welcome.wav`) with speech synthesis fallback for supported browsers.
-- **Luminous Signature Webmaster Credit:** Specialized canvas-driven micro-particle effect with subtle champagne-gold glow and direct LinkedIn profile navigation.
 - **Production-Grade SEO & Metadata:** Automated OpenGraph social previews (`opengraph-image.tsx`), dynamic sitemap (`sitemap.ts`), and crawl directives (`robots.ts`).
 
 ---
@@ -46,8 +45,8 @@ The official web presence of the **JIT ACM Student Chapter** (Association for Co
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/pranjalisantani/JIT_ACM.git
-   cd JIT_ACM
+   git clone https://github.com/jitacm/JIT-ACM-Event-Web-26.git
+   cd JIT-ACM-Event-Web-26
    ```
 
 2. **Install dependencies:**
@@ -152,4 +151,4 @@ The website is continuously deployed to **Vercel** via GitHub integration on pus
 
 ## License & Credits
 
-Maintained by the **JIT ACM Student Chapter**. Built and engineered by **Pranjali Santani** (Webmaster).
+Maintained by the JIT ACM Student Chapter.
